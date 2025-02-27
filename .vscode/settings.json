@@ -1,0 +1,26 @@
+{
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "less.lint.unknownAtRules": "ignore",
+  "css.lint.unknownAtRules": "ignore",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit"
+  },
+  "stylelint.snippet": ["css", "less", "postcss", "scss", "stylus"],
+  "stylelint.validate": ["css", "less", "vue"],
+  "stylelint.packageManager": "pnpm",
+  "eslint.validate": ["vue","tsx", "ts"],
+  "[less]": {
+    "editor.defaultFormatter": "stylelint.vscode-stylelint"
+  },
+  "cSpell.words": [
+    "onbinary",
+    "qiyue",
+    "websockets"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib",
+}
