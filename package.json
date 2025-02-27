@@ -13,6 +13,10 @@
   "author": "机车靓仔",
   "license": "ISC",
   "packageManager": "pnpm@10.4.1",
+  "dependencies": {
+    "dayjs": "^1.11.13",
+    "reflect-metadata": "^0.2.2"
+  },
   "devDependencies": {
     "@types/node": "^22.13.5",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
@@ -29,8 +33,5 @@
     "prettier": "^3.2.5",
     "turbo": "^2.4.4",
     "typescript": "^5.1.3"
-  },
-  "dependencies": {
-    "dayjs": "^1.11.13"
   }
 }

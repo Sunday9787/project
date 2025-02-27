@@ -1,0 +1,16 @@
+{
+  "name": "@repo/eslint-config",
+  "version": "0.0.0",
+  "type": "commonjs",
+  "description": "全局 eslint 配置",
+  "license": "MIT",
+  "exports": {
+    ".": "./index.js",
+    "./vue3": "./vue3/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+  }
+}
