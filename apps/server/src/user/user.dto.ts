@@ -1,7 +1,7 @@
-import { Expose } from 'class-transformer'
-import { IsInt, IsOptional, IsString } from 'class-validator'
+import { Expose, Type } from 'class-transformer'
+import { IsIn, IsInt, IsOptional, IsString, ValidateNested } from 'class-validator'
 import { BaseDTO, BaseResponseDTO } from 'src/common/base.dto'
-import { ListQueryDTO } from 'src/common/query'
+import { ListQueryDTO, QueryOrderByDTO } from 'src/common/query'
 
 import { UserEntity } from './user.entity'
 import { UserRole } from './user.enum'
@@ -63,7 +63,17 @@ export class UserForgetDTO extends BaseDTO {
   password: string
 }
 
-export class UserQueryDTO extends ListQueryDTO<UserQueryDTO> {
+class UserQueryOrderBy implements QueryOrderByDTO<Pick<UserEntity, 'create_at' | 'update_at'>> {
+  @IsOptional()
+  @IsIn(['asc', 'desc'])
+  update_at?: 'asc' | 'desc'
+
+  @IsOptional()
+  @IsIn(['asc', 'desc'])
+  create_at?: 'asc' | 'desc'
+}
+
+export class UserQueryDTO extends ListQueryDTO {
   @IsOptional()
   @IsString()
   phone?: string
@@ -75,4 +85,9 @@ export class UserQueryDTO extends ListQueryDTO<UserQueryDTO> {
   @IsOptional()
   @IsInt()
   role?: UserRole
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => UserQueryOrderBy)
+  order_by?: UserQueryOrderBy
 }

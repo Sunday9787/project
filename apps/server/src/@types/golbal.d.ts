@@ -2,7 +2,7 @@ import type { ResponseUserDTO } from 'src/user/user.dto'
 
 declare module 'http' {
   interface IncomingHttpHeaders {
-    'tenant-id'?: string
+    tenant_id?: string
   }
 }
 

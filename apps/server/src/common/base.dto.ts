@@ -1,6 +1,5 @@
 import { Expose } from 'class-transformer'
-import { IsInt, IsOptional } from 'class-validator'
-import { FindOptionsOrder } from 'typeorm'
+import { IsInt } from 'class-validator'
 
 export class BaseDTO {
   @IsInt()
@@ -12,23 +11,4 @@ export class BaseResponseDTO {
   @Expose() id: number
   @Expose() create_at: Date
   @Expose() update_at: Date
-}
-
-export class BaseQueryDTO<T> {
-  @IsOptional()
-  @IsInt()
-  create_at: Date
-
-  @IsOptional()
-  @IsInt()
-  update_at: Date
-
-  @IsOptional()
-  create_at_start: Date
-
-  @IsOptional()
-  create_at_end: Date
-
-  @IsOptional()
-  order_by?: FindOptionsOrder<T>
 }

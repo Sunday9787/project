@@ -64,6 +64,7 @@ export class UserService {
               : void 0
         },
         select: { password: false },
+        order: query.order_by,
         ...qianliQuery.option
       })
       .then(function (result) {

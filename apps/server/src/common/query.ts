@@ -1,7 +1,17 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsInt, IsNumber, IsOptional, IsString } from 'class-validator'
 import type { FindManyOptions } from 'typeorm'
 
-import { BaseQueryDTO } from './base.dto'
+export type QueryOrderByDTO<T> = { [K in keyof T]?: 'asc' | 'desc' }
+
+class BaseQueryDTO {
+  @IsOptional()
+  @IsInt()
+  create_at_start?: number
+
+  @IsOptional()
+  @IsInt()
+  create_at_end?: number
+}
 
 export class ListDTO<T> {
   size: number
@@ -10,7 +20,7 @@ export class ListDTO<T> {
   list: T[]
 }
 
-export class ListQueryDTO<T> extends BaseQueryDTO<T> {
+export class ListQueryDTO extends BaseQueryDTO {
   @IsNumber()
   size: number
 
@@ -28,15 +38,15 @@ export class ListQueryDTO<T> extends BaseQueryDTO<T> {
   }
 }
 
-export class QiyueQuery<T, D, Q extends ListQueryDTO<T>> {
+export class QiyueQuery<T, D, Q extends ListQueryDTO> {
   private readonly result: ListDTO<D>
-  public readonly option: Pick<FindManyOptions<T>, 'skip' | 'take' | 'order'>
+  public readonly option: Pick<FindManyOptions<T>, 'skip' | 'take'>
 
   constructor(
     private readonly query: Q,
     private readonly handle: (item: T) => D
   ) {
-    this.option = { take: query.size, order: query.order_by, skip: query.size * (query.current - 1) }
+    this.option = { take: query.size, skip: query.size * (query.current - 1) }
     this.result = new ListDTO()
   }
 
