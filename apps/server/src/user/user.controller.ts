@@ -27,7 +27,7 @@ export class UserController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Delete('del')
+  @Delete('del/:id')
   del(@Param('id', ParseIntPipe) id: number, @TenantId() tenant_id: string) {
     return this.userService.del(id, tenant_id)
   }

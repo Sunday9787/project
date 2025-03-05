@@ -1,5 +1,6 @@
 import { BaseEntity } from 'src/common/base.entity'
-import { Column, Entity, Index } from 'typeorm'
+import { ProjectEntity } from 'src/project/project.entity'
+import { Column, Entity, Index, OneToMany } from 'typeorm'
 
 import { UserRole } from './user.enum'
 
@@ -22,4 +23,7 @@ export class UserEntity extends BaseEntity {
   @Index()
   @Column({ type: 'integer', comment: '用户类型: 组织负责人 = 0, 项目负责人 = 1, 勘查员 = 2' })
   role: UserRole
+
+  @OneToMany(() => ProjectEntity, metadata => metadata.owner)
+  project: ProjectEntity[]
 }

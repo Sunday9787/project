@@ -1,13 +1,16 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
+import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { APP_GUARD } from '@nestjs/core'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
+import { AuthModule } from './auth/auth.module'
+import { JwtAuthGuard } from './auth/guard/jwt.guard'
 import { TenantGuard } from './common/guard/tenant'
-import { TenantMiddleware } from './common/middleware/tenant'
+import { ProjectModule } from './project/project.module'
 import { RedisModule } from './redis/redis.module'
+import { SurveyModule } from './survey/survey.module'
 import { UserModule } from './user/user.module'
 
 @Module({
@@ -36,13 +39,12 @@ import { UserModule } from './user/user.module'
       },
       inject: [ConfigService]
     }),
-    UserModule
+    AuthModule,
+    UserModule,
+    ProjectModule,
+    SurveyModule
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_GUARD, useClass: TenantGuard }]
+  providers: [AppService, { provide: APP_GUARD, useClass: TenantGuard }, { provide: APP_GUARD, useClass: JwtAuthGuard }]
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(TenantMiddleware).forRoutes('*')
-  }
-}
+export class AppModule {}

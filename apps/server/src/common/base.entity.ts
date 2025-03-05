@@ -6,9 +6,9 @@ export class BaseEntity extends TenantEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp' })
   create_at: Date
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamp' })
   update_at: Date
 }

@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestApplication, NestFactory } from '@nestjs/core'
+import session from 'express-session'
 
 import { AppModule } from './app.module'
 import { HttpExceptionFilter } from './common/filters/http-filter'
@@ -34,6 +35,17 @@ async function bootstrap() {
       'Content-Disposition'
     ]
   })
+
+  app.use(
+    session({
+      name: 'SESSION_ID',
+      rolling: true,
+      secret: 'ZF5BRFCaeFI',
+      resave: false,
+      cookie: { secure: false, httpOnly: false, maxAge: 2 * 60 * 60 * 1000 },
+      saveUninitialized: false
+    })
+  )
 
   await app.listen(3000)
 }

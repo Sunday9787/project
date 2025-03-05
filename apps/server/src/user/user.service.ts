@@ -34,6 +34,14 @@ export class UserService {
     await this.repository.delete({ id, tenant_id })
   }
 
+  findByPhone(phone: string) {
+    return this.repository.findOneBy({ phone })
+  }
+
+  findById(id: number) {
+    return this.repository.findOneBy({ id })
+  }
+
   async forget(data: UserForgetDTO, tenant_id: string) {
     await this.repository.update({ id: data.id, tenant_id }, { password: md5(data.password) })
   }
