@@ -16,6 +16,18 @@ export class ProjectService {
     @Inject(UserService) private readonly userService: UserService
   ) {}
 
+  async detail(id: number, tenant_id: string) {
+    const data = await this.repository.findOne({
+      where: {
+        id,
+        tenant_id
+      },
+      relations: { survey: true }
+    })
+
+    return plainToInstance(ResponseProjectDTO, data)
+  }
+
   async save(data: ProjectDTO, tenant_id: string, payload: JwtPayload) {
     const entity = this.repository.create(data)
     const user = await this.userService.findById(payload.id)
@@ -36,7 +48,7 @@ export class ProjectService {
 
   all(query: ProjectQueryDTO, tenant_id: string) {
     const qianliQuery = new QiyueQuery(query, function (entity: ProjectEntity) {
-      return plainToInstance(ResponseProjectDTO, entity, { excludeExtraneousValues: true })
+      return plainToInstance(ResponseProjectDTO, entity)
     })
 
     return this.repository

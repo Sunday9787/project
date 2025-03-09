@@ -1,4 +1,18 @@
-import { Body, Controller, Delete, HttpCode, HttpStatus, Inject, Param, ParseIntPipe, Post, Put } from '@nestjs/common'
+import { CacheInterceptor } from '@nestjs/cache-manager'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Inject,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  UseInterceptors
+} from '@nestjs/common'
 import { TenantId } from 'src/common/decorator/tenant'
 import { User } from 'src/common/decorator/user'
 
@@ -8,6 +22,13 @@ import { ProjectService } from './project.service'
 @Controller('project')
 export class ProjectController {
   constructor(@Inject(ProjectService) private readonly service: ProjectService) {}
+
+  @UseInterceptors(CacheInterceptor)
+  @HttpCode(HttpStatus.OK)
+  @Get('detail/:id')
+  detail(@Param('id', ParseIntPipe) id: number, @TenantId() tenant_id: string) {
+    return this.service.detail(id, tenant_id)
+  }
 
   @HttpCode(HttpStatus.OK)
   @Put('save')

@@ -1,9 +1,11 @@
-import { Expose, Type } from 'class-transformer'
-import { IsIn, IsInt, IsOptional, IsString, ValidateNested } from 'class-validator'
+import { Type } from 'class-transformer'
+import { IsEnum, IsInt, IsOptional, IsString, ValidateNested } from 'class-validator'
 import { BaseDTO, BaseResponseDTO } from 'src/common/base.dto'
-import { ListQueryDTO, QueryOrderByDTO } from 'src/common/query'
+import { BaseQueryOrderDTO, ListQueryDTO, QueryOrderByType } from 'src/common/query'
+import { ResponseSurveyDTO } from 'src/survey/survey.dto'
 
 import { ProjectEntity } from './project.entity'
+import { ProjectStatus } from './project.enum'
 
 export class ProjectDTO extends BaseDTO {
   @IsString()
@@ -17,17 +19,12 @@ export class ProjectDTO extends BaseDTO {
 
   @IsString()
   location: string
+
+  @IsEnum(ProjectStatus)
+  status: ProjectStatus
 }
 
-class ProjectOrderBy implements QueryOrderByDTO<Pick<ProjectEntity, 'create_at' | 'update_at'>> {
-  @IsOptional()
-  @IsIn(['asc', 'desc'])
-  update_at?: 'asc' | 'desc'
-
-  @IsOptional()
-  @IsIn(['asc', 'desc'])
-  create_at?: 'asc' | 'desc'
-}
+class ProjectOrderBy extends BaseQueryOrderDTO implements QueryOrderByType<ProjectEntity> {}
 
 export class ProjectQueryDTO extends ListQueryDTO {
   @IsOptional()
@@ -53,15 +50,11 @@ export class ProjectQueryDTO extends ListQueryDTO {
 }
 
 export class ResponseProjectDTO extends BaseResponseDTO {
-  @Expose()
   name: string
-
-  @Expose()
   client: string
-
-  @Expose()
   owner_id: number
-
-  @Expose()
   location: string
+  status: ProjectStatus
+  @Type(() => ResponseSurveyDTO)
+  survey: ResponseSurveyDTO[]
 }

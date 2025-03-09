@@ -1,7 +1,7 @@
 import { BaseEntity } from 'src/common/base.entity'
 import { SurveyEntity } from 'src/survey/survey.entity'
 import { UserEntity } from 'src/user/user.entity'
-import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, RelationId } from 'typeorm'
 
 import { ProjectStatus } from './project.enum'
 
@@ -17,9 +17,12 @@ export class ProjectEntity extends BaseEntity {
 
   /** 项目负责人 */
   @Index()
-  @ManyToOne(() => UserEntity, metadata => metadata)
+  @ManyToOne(() => UserEntity, metadata => metadata.project)
   @JoinColumn({ name: 'owner_id' })
   owner: UserEntity
+
+  @RelationId((project: ProjectEntity) => project.owner)
+  owner_id: number
 
   @Column({ type: 'varchar', comment: '项目所在地' })
   location: string

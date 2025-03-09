@@ -1,9 +1,10 @@
-import { Logger } from '@nestjs/common'
+import { Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestApplication, NestFactory } from '@nestjs/core'
 import session from 'express-session'
 
 import { AppModule } from './app.module'
+import { QyHttpException, QyHttpStatus } from './common/exception/http.exception'
 import { HttpExceptionFilter } from './common/filters/http-filter'
 import { TransformInterceptor } from './common/interceptor/transform.interceptor'
 
@@ -14,6 +15,22 @@ async function bootstrap() {
 
   app.useGlobalFilters(new HttpExceptionFilter())
   app.useGlobalInterceptors(new TransformInterceptor())
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      exceptionFactory: errors => {
+        const errorMessages = errors.map(err => ({
+          field: err.property,
+          errors: Object.values(err.constraints || {})
+        }))
+
+        return new QyHttpException(
+          errorMessages.map(item => `${item.field}: ${item.errors.join()}`).join(','),
+          QyHttpStatus.BAD_REQUEST
+        )
+      }
+    })
+  )
   app.enableCors({
     origin: origin.split(','),
     credentials: true,
