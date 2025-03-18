@@ -1,4 +1,6 @@
 {
+  "npm.packageManager": "pnpm",
+  "stylelint.packageManager": "pnpm",
   "eslint.workingDirectories": [
     {
       "mode": "auto"
@@ -6,15 +8,21 @@
   ],
   "less.lint.unknownAtRules": "ignore",
   "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.fixAll.stylelint": "explicit"
   },
   "stylelint.snippet": ["css", "less", "postcss", "scss", "stylus"],
-  "stylelint.validate": ["css", "less", "vue"],
-  "stylelint.packageManager": "pnpm",
+  "stylelint.validate": ["css", "less", "scss", "stylus", "vue"],
   "eslint.validate": ["vue","tsx", "ts"],
   "[less]": {
+    "editor.defaultFormatter": "stylelint.vscode-stylelint"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "stylelint.vscode-stylelint"
+  },
+  "[stylus]": {
     "editor.defaultFormatter": "stylelint.vscode-stylelint"
   },
   "cSpell.words": [
