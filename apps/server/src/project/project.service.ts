@@ -22,7 +22,7 @@ export class ProjectService {
         id,
         tenant_id
       },
-      relations: { survey: true }
+      relations: { survey: true, members: true, owner: true }
     })
 
     return plainToInstance(ResponseProjectDTO, data)
@@ -55,13 +55,14 @@ export class ProjectService {
       .findAndCount({
         where: {
           tenant_id,
-          name: query.name && Like(`%${query.name}%`),
-          client: query.client && Like(`%${query.client}%`),
+          name: query.keyword ? Like(`%${query.keyword}%`) : query.name ? Like(`%${query.name}%`) : void 0,
+          client: query.keyword ? Like(`%${query.keyword}%`) : query.client ? Like(`%${query.client}%`) : void 0,
           create_at:
             query.create_at_start && query.create_at_end
               ? Between(new Date(query.create_at_start), new Date(query.create_at_end))
               : void 0
         },
+        relations: { owner: true },
         order: query.order_by,
         ...qianliQuery.option
       })

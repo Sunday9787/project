@@ -1,7 +1,7 @@
 import { BaseEntity } from 'src/common/base.entity'
 import { SurveyEntity } from 'src/survey/survey.entity'
 import { UserEntity } from 'src/user/user.entity'
-import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, RelationId } from 'typeorm'
+import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, RelationId } from 'typeorm'
 
 import { ProjectStatus } from './project.enum'
 
@@ -33,4 +33,11 @@ export class ProjectEntity extends BaseEntity {
 
   @OneToMany(() => SurveyEntity, metadata => metadata.project)
   survey: SurveyEntity[]
+
+  @ManyToMany(() => UserEntity, metadata => metadata.projects)
+  @JoinTable({
+    joinColumn: { name: 'project_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' }
+  })
+  members: UserEntity[]
 }

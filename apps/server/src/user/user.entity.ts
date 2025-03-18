@@ -1,6 +1,6 @@
 import { BaseEntity } from 'src/common/base.entity'
 import { ProjectEntity } from 'src/project/project.entity'
-import { Column, Entity, Index, OneToMany } from 'typeorm'
+import { Column, Entity, Index, ManyToMany, OneToMany } from 'typeorm'
 
 import { UserRole } from './user.enum'
 
@@ -14,7 +14,7 @@ export class UserEntity extends BaseEntity {
   @Column({ type: 'varchar', comment: '用户名' })
   nickname: string
 
-  @Column({ type: 'varchar', comment: '密码' })
+  @Column({ type: 'varchar', select: false, comment: '密码' })
   password: string
 
   @Column({ type: 'varchar', default: null })
@@ -26,4 +26,7 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => ProjectEntity, metadata => metadata.owner)
   project: ProjectEntity[]
+
+  @ManyToMany(() => ProjectEntity, metadata => metadata.members)
+  projects: ProjectEntity[]
 }

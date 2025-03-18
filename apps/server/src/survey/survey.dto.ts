@@ -5,7 +5,7 @@ import { BaseQueryOrderDTO, ListQueryDTO, QueryOrderByType } from 'src/common/qu
 import { IsChineseIDCard } from 'src/common/validate/id.card'
 
 import { SurveyEntity } from './survey.entity'
-import { SurveyStructure } from './survey.enum'
+import { SurveyStatus, SurveyStructure } from './survey.enum'
 
 class ResponseSurveyDetailImgDTO extends BaseResponseDTO {
   survey_detail_id: number
@@ -26,6 +26,8 @@ export class ResponseSurveyDTO extends BaseResponseDTO {
   distance: number
 
   location: string
+
+  status: SurveyStatus
 
   structure_type: SurveyStructure
 

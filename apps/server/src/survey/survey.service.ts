@@ -76,8 +76,8 @@ export class SurveyService {
       .findAndCount({
         where: {
           tenant_id,
-          owner: query.owner && Like(`%${query.owner}%`),
-          id_card: query.id_card && Like(`%${query.id_card}`),
+          owner: query.owner ? Like(`%${query.owner}%`) : void 0,
+          id_card: query.id_card ? Like(`%${query.id_card}`) : void 0,
           create_at:
             query.create_at_start && query.create_at_end
               ? Between(new Date(query.create_at_start), new Date(query.create_at_end))

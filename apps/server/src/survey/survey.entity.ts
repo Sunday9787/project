@@ -3,7 +3,7 @@ import { ProjectEntity } from 'src/project/project.entity'
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToOne, RelationId } from 'typeorm'
 
 import { SurveyDetailEntity } from './survey.detail.entity'
-import { SurveyPurposeHouse, SurveyStructure } from './survey.enum'
+import { SurveyPurposeHouse, SurveyStatus, SurveyStructure } from './survey.enum'
 
 @Entity('survey')
 export class SurveyEntity extends BaseEntity {
@@ -49,6 +49,10 @@ export class SurveyEntity extends BaseEntity {
 
   @Column({ type: 'varchar', comment: '客户签字' })
   owner_signature_img: string
+
+  @Index()
+  @Column({ type: 'integer', default: SurveyStatus.start, comment: '勘察状态' })
+  status: SurveyStatus
 
   @RelationId((entity: SurveyEntity) => entity.project)
   project_id: number

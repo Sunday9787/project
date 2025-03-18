@@ -3,6 +3,7 @@ import { IsEnum, IsInt, IsOptional, IsString, ValidateNested } from 'class-valid
 import { BaseDTO, BaseResponseDTO } from 'src/common/base.dto'
 import { BaseQueryOrderDTO, ListQueryDTO, QueryOrderByType } from 'src/common/query'
 import { ResponseSurveyDTO } from 'src/survey/survey.dto'
+import { ResponseUserDTO } from 'src/user/user.dto'
 
 import { ProjectEntity } from './project.entity'
 import { ProjectStatus } from './project.enum'
@@ -29,19 +30,23 @@ class ProjectOrderBy extends BaseQueryOrderDTO implements QueryOrderByType<Proje
 export class ProjectQueryDTO extends ListQueryDTO {
   @IsOptional()
   @IsString()
-  name: string
+  name?: string
 
   @IsOptional()
   @IsString()
-  client: string
+  keyword?: string
+
+  @IsOptional()
+  @IsString()
+  client?: string
 
   @IsOptional()
   @IsInt()
-  owner_id: number
+  owner_id?: number
 
   @IsOptional()
   @IsString()
-  location: string
+  location?: string
 
   @IsOptional()
   @ValidateNested()
@@ -57,4 +62,8 @@ export class ResponseProjectDTO extends BaseResponseDTO {
   status: ProjectStatus
   @Type(() => ResponseSurveyDTO)
   survey: ResponseSurveyDTO[]
+  @Type(() => ResponseUserDTO)
+  owner: ResponseUserDTO
+  @Type(() => ResponseUserDTO)
+  members: ResponseUserDTO[]
 }

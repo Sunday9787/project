@@ -35,7 +35,10 @@ export class UserService {
   }
 
   findByPhone(phone: string) {
-    return this.repository.findOneBy({ phone })
+    return this.repository.findOne({
+      where: { phone },
+      select: ['id', 'tenant_id', 'avatar', 'nickname', 'phone', 'password', 'create_at', 'update_at']
+    })
   }
 
   findById(id: number) {
@@ -55,8 +58,8 @@ export class UserService {
       .findAndCount({
         where: {
           tenant_id,
-          nickname: query.nickname && Like(`%${query.nickname}`),
-          phone: query.phone && Like(`%${query.phone}`),
+          nickname: query.nickname ? Like(`%${query.nickname}`) : void 0,
+          phone: query.phone ? Like(`%${query.phone}`) : void 0,
           role: query.role,
           create_at:
             query.create_at_start && query.create_at_end
