@@ -3,6 +3,6 @@ import utc from 'dayjs/plugin/utc'
 
 dayjs.extend(utc)
 
-export function formatDate(date: Date | string | number | null, format = 'YYYY-MM-DD HH:mm:ss') {
+export function formatDate(date: Date | string | number | null, format = 'YYYY-MM-DD') {
   if (date) return dayjs.utc(date).local().format(format)
 }

@@ -14,3 +14,21 @@ declare namespace AppResponse {
     list: T[]
   }
 }
+
+declare namespace AppRequest {
+  interface List {
+    current?: number
+    size?: number
+  }
+}
+
+declare namespace Utils {
+  type ActionType = 'edit' | 'add' | 'detail'
+
+  interface ActionProps {
+    id: number
+    type: ActionType
+  }
+
+  type StatusType = 'default' | 'primary' | 'success' | 'warning' | 'error'
+}

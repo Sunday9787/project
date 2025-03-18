@@ -1,10 +1,10 @@
-import { formatDate } from "@/utils"
-import { Transform, instanceToPlain } from "class-transformer"
+import { type ClassConstructor, Expose, instanceToPlain, plainToInstance, Transform } from 'class-transformer'
+
+import { formatDate } from '@/utils'
 
 type ObjectKey<T> = keyof T extends `${infer U}` ? U : string
-type AbstractEntityMethodKey = ObjectKey<AbstractEntity>
 type EntityMethodKey = ObjectKey<AbstractEntityMethod>
-type ExcludeEntityAttribute = EntityMethodKey | AbstractEntityMethodKey
+type ExcludeEntityAttribute = EntityMethodKey
 export type EntityQuery<T, Attr = unknown> = Omit<T, ExcludeEntityAttribute & Attr>
 export type EntityJSON<T> = Omit<T, ExcludeEntityAttribute>
 
@@ -26,11 +26,31 @@ export abstract class AbstractEntity {
     return instanceToPlain(context, { excludeExtraneousValues: true }) as EntityJSON<T>
   }
 
-  @Transform(val => formatDate(val.value))
-  readonly createAt: Date
+  public static async wrapperList<T>(context: ClassConstructor<T>, Result: Promise<AppResponse.List<T>>) {
+    const response = await Result
+    response.list = plainToInstance(context, response.list)
+    return response
+  }
+
+  public static async wrapper<T>(context: ClassConstructor<T>, Result: Promise<T>): Promise<T>
+  public static async wrapper<T>(context: ClassConstructor<T>, Result: Promise<T[]>): Promise<T[]>
+  public static async wrapper<T>(context: ClassConstructor<T>, Result: Promise<T | T[]>): Promise<T | T[]> {
+    const response = await Result
+
+    if (Array.isArray(response)) {
+      return response.map(item => plainToInstance(context, item))
+    }
+
+    return plainToInstance(context, response, { exposeDefaultValues: true })
+  }
+
+  @Expose() id: number
 
   @Transform(val => formatDate(val.value))
-  readonly updateAt: Date
+  readonly create_at: Date
+
+  @Transform(val => formatDate(val.value))
+  readonly update_at: Date
 
   public toJSON() {
     return AbstractEntity.toJSON(this)

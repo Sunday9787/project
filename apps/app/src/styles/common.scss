@@ -5,3 +5,62 @@
 .mt-60 {
   margin-top: 60rpx;
 }
+
+.flex-1 {
+  flex: 1;
+}
+
+.page-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--bg-color);
+}
+
+.scroll-view {
+  flex: 1;
+  overflow: hidden;
+}
+
+.scroll-view-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.line-1 {
+  @include ellipsis;
+}
+
+.line-2 {
+  @include ellipsis(2);
+}
+
+.line-3 {
+  @include ellipsis(3);
+}
+
+.line-4 {
+  @include ellipsis(4);
+}
+
+.line-5 {
+  @include ellipsis(5);
+}
+
+.loading-text {
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  text-align: center;
+}
+
+.view-container {
+  padding-right: 30rpx;
+  padding-left: 30rpx;
+}
+
+.text-right {
+  text-align: right;
+}

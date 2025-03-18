@@ -1,2 +1,11 @@
-@import './theme.scss';
-@import './common.scss';
+@import './mixin';
+@import './reset';
+@import './theme';
+@import './common';
+
+page {
+  height: 100%;
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: var(--text-color);
+}

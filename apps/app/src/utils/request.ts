@@ -1,6 +1,7 @@
-import qs from 'qs'
-import { useUserModule } from '@/store/user'
 import axios, { type AxiosRequestConfig } from 'axios'
+import qs from 'qs'
+
+import { useUserModule } from '@/store/user'
 
 enum QyHttpStatus {
   USER_NOT_FOUND = 1000,
@@ -8,6 +9,7 @@ enum QyHttpStatus {
   USER_TOKEN_INVALID = 1002,
   USER_REFRESH_TOKEN_INVALID = 1003,
   USER_EXISTED = 1004,
+  TENANT_ID_NOT_FOUND = 1005,
   BAD_REQUEST = 0,
   OK_REQUEST = 200
 }
@@ -63,6 +65,40 @@ AxiosInstance.interceptors.request.use(function (config) {
   }
 
   return config
+})
+
+AxiosInstance.interceptors.response.use(function (response) {
+  const userModule = useUserModule()
+  if (response.data.code !== QyHttpStatus.OK_REQUEST) {
+    console.error(response.data)
+
+    if (response.data.code === QyHttpStatus.TENANT_ID_NOT_FOUND) {
+      uni.showToast({ icon: 'error', title: '租户不存在' })
+      console.error('租户不存在')
+      setTimeout(function () {
+        uni.redirectTo({ url: '/pages/auth/auth' })
+      }, 0)
+      return Promise.reject(response)
+    }
+
+    // ! REFRESH__TOKEN 失效退出登录
+    if (
+      response.data.code === QyHttpStatus.USER_REFRESH_TOKEN_INVALID ||
+      response.data.code === QyHttpStatus.USER_TOKEN_INVALID
+    ) {
+      uni.showToast({ icon: 'error', title: 'token失效 请重新登录' })
+      console.error('token失效 请重新登录')
+      userModule.$reset()
+      window.setTimeout(function () {
+        uni.redirectTo({ url: '/pages/auth/auth' })
+      }, 0)
+      return Promise.reject(response)
+    }
+
+    return Promise.reject(response)
+  }
+
+  return response
 })
 
 export function request<R = null>(config: AxiosRequestConfig) {

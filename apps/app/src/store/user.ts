@@ -31,7 +31,7 @@ export const useUserModule = defineStore('userModule', {
       },
       setItem(key, value) {
         uni.setStorageSync(key, value)
-      },
+      }
     }
   }
 })

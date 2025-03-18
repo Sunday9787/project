@@ -1,0 +1,13 @@
+view,
+navigator,
+input,
+scroll-view {
+  box-sizing: border-box;
+}
+
+swiper,
+scroll-view {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}

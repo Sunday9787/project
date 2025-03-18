@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
+import { onHide, onLaunch, onShow } from '@dcloudio/uni-app'
 
 onLaunch(function () {
   console.log('App Launch')
@@ -16,4 +16,6 @@ onHide(function () {
 
 <style lang="scss">
 /*每个页面公共css */
+/* stylelint-disable-next-line scss/load-partial-extension */
+@import './styles/index.scss';
 </style>

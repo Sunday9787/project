@@ -10,7 +10,13 @@
     {
       "path": "pages/home/home",
       "style": {
-        "navigationBarTitleText": "uni-app x"
+        "navigationBarTitleText": "项目列表"
+      }
+    },
+    {
+      "path": "pages/project/detail",
+      "style": {
+        "navigationBarTitleText": "项目详情"
       }
     },
     {

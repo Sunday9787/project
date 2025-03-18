@@ -1,14 +1,14 @@
 import 'reflect-metadata'
 
-import { createSSRApp } from "vue";
+import { createSSRApp } from 'vue'
+
+import App from './App.vue'
 import store from './store'
-
-import App from "./App.vue";
 export function createApp() {
-	const app = createSSRApp(App);
-	app.use(store)
+  const app = createSSRApp(App)
+  app.use(store)
 
-	return {
-		app,
-	};
+  return {
+    app
+  }
 }
