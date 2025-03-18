@@ -1,5 +1,6 @@
 import { AbstractService } from '@/class/abstractService'
 import { request } from '@/utils/request'
+
 import { type AuthEntityJSON, AuthLoginEntityResult } from './auth.entity'
 
 export class AuthService extends AbstractService {
