@@ -1,24 +1,13 @@
 import { Transform, Type } from 'class-transformer'
-import { IsDate, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator'
-import { BaseDTO, BaseResponseDTO } from 'src/common/base.dto'
-import { BaseQueryOrderDTO, ListQueryDTO, QueryOrderByType } from 'src/common/query'
+import { IsDate, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator'
+import { BaseDTO, QueryBaseOrderDTO, ResponseBaseDTO, QueryOrderByType } from 'src/common/base.dto'
+import { ListQueryDTO } from 'src/common/query'
 import { IsChineseIDCard } from 'src/common/validate/id.card'
 
 import { SurveyEntity } from './survey.entity'
 import { SurveyStatus, SurveyStructure } from './survey.enum'
 
-class ResponseSurveyDetailImgDTO extends BaseResponseDTO {
-  survey_detail_id: number
-}
-
-class ResponseSurveyDetailDTO extends BaseResponseDTO {
-  damaged_part: string
-  desc: string
-  @Type(() => ResponseSurveyDetailImgDTO)
-  img: ResponseSurveyDetailImgDTO[]
-}
-
-export class ResponseSurveyDTO extends BaseResponseDTO {
+export class ResponseSurveyDTO extends ResponseBaseDTO {
   owner: string
 
   id_card: string
@@ -27,14 +16,16 @@ export class ResponseSurveyDTO extends BaseResponseDTO {
 
   location: string
 
+  number_of_floors: number
+
   status: SurveyStatus
 
   structure_type: SurveyStructure
 
+  building_area: number
+
   @Transform(val => new Date(val.value).getTime())
   building_construction_date: Date
-
-  building_area: string
 
   @Transform(val => new Date(val.value).getTime())
   preservation_date: Date
@@ -42,42 +33,10 @@ export class ResponseSurveyDTO extends BaseResponseDTO {
   building_img: string
 
   owner_signature_img: string
-
-  @Type(() => ResponseSurveyDetailDTO)
-  detail: ResponseSurveyDetailDTO
-}
-
-class SurveyDetailImgDTO {
-  @IsInt()
-  id: number
-
-  @IsInt()
-  survey_detail_id: number
-
-  @IsString()
-  @IsNotEmpty()
-  url: string
-}
-
-class SurveyDetailDTO extends BaseDTO {
-  @IsInt()
-  survey_id: number
-
-  @IsString()
-  @IsNotEmpty({ message: '损坏部分不得为空' })
-  damaged_part: string
-
-  @IsString()
-  @IsNotEmpty({ message: '损坏描述不得为空' })
-  desc: string
-
-  @ValidateNested()
-  @Type(() => SurveyDetailImgDTO)
-  img: SurveyDetailImgDTO[]
 }
 
 export class SurveyDTO extends BaseDTO {
-  @IsInt()
+  @IsInt({ message: '项目id不得为空' })
   project_id: number
 
   @IsString()
@@ -92,6 +51,9 @@ export class SurveyDTO extends BaseDTO {
   @IsNumber()
   distance: number
 
+  @IsInt({ message: '房屋层数不得为空' })
+  number_of_floors: number
+
   @IsNotEmpty({ message: '房屋坐落位置不得为空' })
   location: string
 
@@ -102,9 +64,10 @@ export class SurveyDTO extends BaseDTO {
   @IsDate({ message: '日期不合法' })
   building_construction_date: Date
 
-  @IsString()
+  @IsInt()
+  @Min(1, { message: '建筑面积不得小于1' })
   @IsNotEmpty({ message: '建筑面积不得为空' })
-  building_area: string
+  building_area: number
 
   @Transform(val => new Date(val.value))
   @IsDate({ message: '日期不合法' })
@@ -125,13 +88,9 @@ export class SurveyDTO extends BaseDTO {
   @IsOptional()
   @IsString()
   property_plan_img?: string
-
-  @ValidateNested()
-  @Type(() => SurveyDetailDTO)
-  detail: SurveyDetailDTO
 }
 
-class SurveyOrderByDTO extends BaseQueryOrderDTO implements QueryOrderByType<SurveyEntity> {}
+class SurveyOrderByDTO extends QueryBaseOrderDTO implements QueryOrderByType<SurveyEntity> {}
 
 export class SurveyQueryDTO extends ListQueryDTO {
   @IsOptional()

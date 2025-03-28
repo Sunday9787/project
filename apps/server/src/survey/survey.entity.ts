@@ -1,8 +1,8 @@
 import { BaseEntity } from 'src/common/base.entity'
 import { ProjectEntity } from 'src/project/project.entity'
-import { Column, Entity, Index, JoinColumn, ManyToOne, OneToOne, RelationId } from 'typeorm'
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, RelationId } from 'typeorm'
 
-import { SurveyDetailEntity } from './survey.detail.entity'
+import { SurveyDetailEntity } from './detail/detail.entity'
 import { SurveyPurposeHouse, SurveyStatus, SurveyStructure } from './survey.enum'
 
 @Entity('survey')
@@ -25,6 +25,9 @@ export class SurveyEntity extends BaseEntity {
   @Column({ type: 'integer', comment: '结构类型' })
   structure_type: SurveyStructure
 
+  @Column({ type: 'integer', comment: '房屋层数' })
+  number_of_floors: number
+
   @Index()
   @Column({ type: 'integer', comment: '房屋用途' })
   purpose_house: SurveyPurposeHouse
@@ -32,8 +35,8 @@ export class SurveyEntity extends BaseEntity {
   @Column({ type: 'timestamp', comment: '建成年份' })
   building_construction_date: Date
 
-  @Column({ type: 'varchar', comment: '建筑面积' })
-  building_area: string
+  @Column({ type: 'integer', comment: '建筑面积 平方米' })
+  building_area: number
 
   @Column({ type: 'timestamp', comment: '保全日期' })
   preservation_date: Date
@@ -61,10 +64,6 @@ export class SurveyEntity extends BaseEntity {
   @JoinColumn({ name: 'project_id' })
   project: ProjectEntity
 
-  @RelationId((entity: SurveyEntity) => entity.detail)
-  survey_detail_id: number
-
-  @OneToOne(() => SurveyDetailEntity)
-  @JoinColumn({ name: 'survey_detail_id' })
-  detail: SurveyDetailEntity
+  @OneToMany(() => SurveyDetailEntity, metadata => metadata.survey)
+  detail: SurveyDetailEntity[]
 }

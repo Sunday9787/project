@@ -66,7 +66,6 @@ export class UserService {
               ? Between(new Date(query.create_at_start), new Date(query.create_at_end))
               : void 0
         },
-        select: { password: false },
         order: query.order_by,
         ...qianliQuery.option
       })

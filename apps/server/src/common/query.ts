@@ -1,27 +1,7 @@
-import { IsIn, IsInt, IsNumber, IsOptional } from 'class-validator'
+import { IsInt, Min } from 'class-validator'
 import type { FindManyOptions } from 'typeorm'
 
-export type QueryOrderByType<T> = { [K in keyof T]?: 'asc' | 'desc' }
-
-export class BaseQueryOrderDTO implements QueryOrderByType<Record<'create_at' | 'update_at', unknown>> {
-  @IsOptional()
-  @IsIn(['asc', 'desc'])
-  update_at?: 'asc' | 'desc'
-
-  @IsOptional()
-  @IsIn(['asc', 'desc'])
-  create_at?: 'asc' | 'desc'
-}
-
-class BaseQueryDTO {
-  @IsOptional()
-  @IsInt()
-  create_at_start?: number
-
-  @IsOptional()
-  @IsInt()
-  create_at_end?: number
-}
+import { QueryBaseDTO } from './base.dto'
 
 export class ListDTO<T> {
   size: number
@@ -30,11 +10,13 @@ export class ListDTO<T> {
   list: T[]
 }
 
-export class ListQueryDTO extends BaseQueryDTO {
-  @IsNumber()
+export class ListQueryDTO extends QueryBaseDTO {
+  @Min(1)
+  @IsInt()
   size: number
 
-  @IsNumber()
+  @Min(1)
+  @IsInt()
   current: number
 
   constructor(size: number = 10, current: number = 1) {

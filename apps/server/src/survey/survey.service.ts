@@ -1,15 +1,13 @@
 import { Injectable } from '@nestjs/common'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
 import { QyHttpException, QyHttpStatus } from 'src/common/exception/http.exception'
 import { QiyueQuery } from 'src/common/query'
 import { ProjectEntity } from 'src/project/project.entity'
-import { Between, EntityManager, Like, Repository } from 'typeorm'
+import { Between, Like, Repository } from 'typeorm'
 
-import { SurveyDetailEntity } from './survey.detail.entity'
 import { ResponseSurveyDTO, SurveyDTO, SurveyQueryDTO } from './survey.dto'
 import { SurveyEntity } from './survey.entity'
-import { SurveyDetailImgEntity } from './survey.img.entity'
 
 @Injectable()
 export class SurveyService {
@@ -17,22 +15,12 @@ export class SurveyService {
     @InjectRepository(SurveyEntity)
     private readonly surveyRepository: Repository<SurveyEntity>,
     @InjectRepository(ProjectEntity)
-    private readonly projectRepository: Repository<ProjectEntity>,
-    @InjectRepository(SurveyDetailEntity)
-    private readonly surveyDetailRepository: Repository<SurveyDetailEntity>,
-    @InjectRepository(SurveyDetailImgEntity)
-    private readonly surveyDetailImgRepository: Repository<SurveyDetailImgEntity>,
-    @InjectEntityManager() private readonly manager: EntityManager
+    private readonly projectRepository: Repository<ProjectEntity>
   ) {}
 
   async detail(id: number, tenant_id: string) {
     const data = await this.surveyRepository.findOne({
-      where: { id, tenant_id },
-      relations: {
-        detail: {
-          img: true
-        }
-      }
+      where: { id, tenant_id }
     })
 
     return plainToInstance(ResponseSurveyDTO, data)
@@ -45,26 +33,11 @@ export class SurveyService {
       throw new QyHttpException('该租户下项目未找到', QyHttpStatus.BAD_REQUEST)
     }
 
-    return this.manager.transaction(async transactionalEntityManager => {
-      const surveyDetail = this.surveyDetailRepository.create(data.detail)
-      surveyDetail.tenant_id = tenant_id
+    const entity = this.surveyRepository.create(data)
+    entity.tenant_id = tenant_id
+    entity.project = project
 
-      const surveyDetailImg = this.surveyDetailImgRepository.create(data.detail.img)
-
-      for (const item of surveyDetailImg) {
-        item.tenant_id = tenant_id
-        item.detail = surveyDetail
-      }
-
-      const survey = this.surveyRepository.create(data)
-      survey.project = project
-      survey.tenant_id = tenant_id
-      survey.detail = surveyDetail
-
-      await transactionalEntityManager.save(SurveyDetailEntity, surveyDetail)
-      await transactionalEntityManager.save(SurveyDetailImgEntity, surveyDetailImg)
-      await transactionalEntityManager.save(SurveyEntity, survey)
-    })
+    this.surveyRepository.save(entity)
   }
 
   all(query: SurveyQueryDTO, tenant_id: string) {
@@ -74,15 +47,20 @@ export class SurveyService {
 
     return this.surveyRepository
       .findAndCount({
-        where: {
-          tenant_id,
-          owner: query.owner ? Like(`%${query.owner}%`) : void 0,
-          id_card: query.id_card ? Like(`%${query.id_card}`) : void 0,
-          create_at:
-            query.create_at_start && query.create_at_end
-              ? Between(new Date(query.create_at_start), new Date(query.create_at_end))
-              : void 0
-        },
+        where: query.keyword
+          ? [
+              { tenant_id, owner: Like(`%${query.keyword}%`) },
+              { tenant_id, id_card: Like(`%${query.keyword}%`) }
+            ]
+          : {
+              tenant_id,
+              owner: query.owner ? Like(`%${query.owner}%`) : void 0,
+              id_card: query.id_card ? Like(`%${query.id_card}`) : void 0,
+              create_at:
+                query.create_at_start && query.create_at_end
+                  ? Between(new Date(query.create_at_start), new Date(query.create_at_end))
+                  : void 0
+            },
         order: query.order_by,
         ...qianliQuery.option
       })

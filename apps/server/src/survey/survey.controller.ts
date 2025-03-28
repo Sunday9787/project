@@ -6,10 +6,10 @@ import {
   HttpCode,
   HttpStatus,
   Inject,
-  Param,
   ParseIntPipe,
   Post,
   Put,
+  Query,
   UseInterceptors
 } from '@nestjs/common'
 import { TenantId } from 'src/common/decorator/tenant'
@@ -23,8 +23,8 @@ export class SurveyController {
 
   @UseInterceptors(CacheInterceptor)
   @HttpCode(HttpStatus.OK)
-  @Get('detail/:id')
-  data(@Param('id', ParseIntPipe) id: number, @TenantId() tenant_id: string) {
+  @Get('detail')
+  data(@Query('id', ParseIntPipe) id: number, @TenantId() tenant_id: string) {
     return this.service.detail(id, tenant_id)
   }
 

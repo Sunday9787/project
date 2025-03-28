@@ -6,7 +6,9 @@ import session from 'express-session'
 import { AppModule } from './app.module'
 import { QyHttpException, QyHttpStatus } from './common/exception/http.exception'
 import { HttpExceptionFilter } from './common/filters/http-filter'
+import { NoCacheInterceptor } from './common/interceptor/nocache.interceptor'
 import { TransformInterceptor } from './common/interceptor/transform.interceptor'
+import { getIpAddress } from './tools/network'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestApplication>(AppModule)
@@ -14,7 +16,7 @@ async function bootstrap() {
   const origin = config.get('SERVER_CORS') as string
 
   app.useGlobalFilters(new HttpExceptionFilter())
-  app.useGlobalInterceptors(new TransformInterceptor())
+  app.useGlobalInterceptors(new TransformInterceptor(), new NoCacheInterceptor())
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -64,7 +66,11 @@ async function bootstrap() {
     })
   )
 
-  await app.listen(3000)
+  const ip = getIpAddress()
+
+  await app.listen(3000, '0.0.0.0')
+  console.log(`🚀 Server running at http://localhost:3000`)
+  console.log(`🚀 Server running at http://${ip.v4}:3000`)
 }
 
 Logger.verbose(process.env.NODE_ENV, 'NODE_ENV')

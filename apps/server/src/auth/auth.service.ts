@@ -55,7 +55,7 @@ export class AuthService {
     return this.redisService.cacheManager.set(
       AuthService.generateTokenKey(dto.access_token),
       dto,
-      dayjs().add(num, type).unix() * 1e3 - Date.now()
+      dayjs().add(num, type).valueOf() - Date.now()
     )
   }
 

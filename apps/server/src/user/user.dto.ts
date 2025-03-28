@@ -1,7 +1,7 @@
 import { Expose, Type } from 'class-transformer'
 import { IsIn, IsInt, IsOptional, IsString, ValidateNested } from 'class-validator'
-import { BaseDTO, BaseResponseDTO } from 'src/common/base.dto'
-import { BaseQueryOrderDTO, ListQueryDTO, QueryOrderByType } from 'src/common/query'
+import { BaseDTO, QueryBaseOrderDTO, QueryOrderByType, ResponseBaseDTO } from 'src/common/base.dto'
+import { ListQueryDTO } from 'src/common/query'
 
 import { UserEntity } from './user.entity'
 import { UserRole } from './user.enum'
@@ -21,7 +21,7 @@ export class UserDTO extends BaseDTO {
   avatar: string | null
 }
 
-export class ResponseUserDTO extends BaseResponseDTO {
+export class ResponseUserDTO extends ResponseBaseDTO {
   @Expose()
   phone: string
 
@@ -35,7 +35,7 @@ export class ResponseUserDTO extends BaseResponseDTO {
   avatar: string | null
 }
 
-export class ResponseUserLoginDTO extends BaseResponseDTO {
+export class ResponseUserLoginDTO extends ResponseBaseDTO {
   @Expose() nickname: string
   @Expose() phone: string
   @Expose() access_token: string
@@ -63,7 +63,7 @@ export class UserForgetDTO extends BaseDTO {
   password: string
 }
 
-class UserQueryOrderBy extends BaseQueryOrderDTO implements QueryOrderByType<UserEntity> {
+class UserQueryOrderBy extends QueryBaseOrderDTO implements QueryOrderByType<UserEntity> {
   @IsOptional()
   @IsIn(['asc', 'desc'])
   nickname?: 'asc' | 'desc'

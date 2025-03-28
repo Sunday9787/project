@@ -1,7 +1,8 @@
 import { BaseEntity } from 'src/common/base.entity'
-import { Column, Entity, Index, OneToMany } from 'typeorm'
+import { SurveyEntity } from 'src/survey/survey.entity'
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, RelationId } from 'typeorm'
 
-import { SurveyDetailImgEntity } from './survey.img.entity'
+import { SurveyDetailImgEntity } from './img.entity'
 
 @Entity('survey_detail')
 export class SurveyDetailEntity extends BaseEntity {
@@ -14,4 +15,11 @@ export class SurveyDetailEntity extends BaseEntity {
 
   @OneToMany(() => SurveyDetailImgEntity, metadata => metadata.detail)
   img: SurveyDetailImgEntity[]
+
+  @RelationId((entity: SurveyDetailEntity) => entity.survey)
+  survey_id: number
+
+  @ManyToOne(() => SurveyEntity, metadata => metadata.detail)
+  @JoinColumn({ name: 'survey_id' })
+  survey: SurveyEntity
 }

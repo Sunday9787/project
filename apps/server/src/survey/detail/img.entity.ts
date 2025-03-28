@@ -1,7 +1,7 @@
 import { BaseEntity } from 'src/common/base.entity'
 import { Column, Entity, JoinColumn, ManyToOne, RelationId } from 'typeorm'
 
-import { SurveyDetailEntity } from './survey.detail.entity'
+import { SurveyDetailEntity } from './detail.entity'
 
 @Entity('survey_img')
 export class SurveyDetailImgEntity extends BaseEntity {

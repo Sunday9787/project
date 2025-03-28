@@ -1,13 +1,14 @@
-// import { Expose } from 'class-transformer'
 import { Transform } from 'class-transformer'
-import { IsInt } from 'class-validator'
+import { IsIn, IsInt, IsOptional, IsString } from 'class-validator'
+
+export type QueryOrderByType<T> = { [K in keyof T]?: 'asc' | 'desc' }
 
 export class BaseDTO {
   @IsInt()
   id: number
 }
 
-export class BaseResponseDTO {
+export class ResponseBaseDTO {
   tenant_id: string
   id: number
 
@@ -16,4 +17,28 @@ export class BaseResponseDTO {
 
   @Transform(val => new Date(val.value).getTime())
   update_at: number
+}
+
+export class QueryBaseOrderDTO implements QueryOrderByType<Record<'create_at' | 'update_at', unknown>> {
+  @IsOptional()
+  @IsIn(['asc', 'desc'])
+  update_at?: 'asc' | 'desc'
+
+  @IsOptional()
+  @IsIn(['asc', 'desc'])
+  create_at?: 'asc' | 'desc'
+}
+
+export class QueryBaseDTO {
+  @IsOptional()
+  @IsInt()
+  create_at_start?: number
+
+  @IsOptional()
+  @IsInt()
+  create_at_end?: number
+
+  @IsOptional()
+  @IsString()
+  keyword?: string
 }

@@ -53,15 +53,20 @@ export class ProjectService {
 
     return this.repository
       .findAndCount({
-        where: {
-          tenant_id,
-          name: query.keyword ? Like(`%${query.keyword}%`) : query.name ? Like(`%${query.name}%`) : void 0,
-          client: query.keyword ? Like(`%${query.keyword}%`) : query.client ? Like(`%${query.client}%`) : void 0,
-          create_at:
-            query.create_at_start && query.create_at_end
-              ? Between(new Date(query.create_at_start), new Date(query.create_at_end))
-              : void 0
-        },
+        where: query.keyword
+          ? [
+              { tenant_id, name: Like(`%${query.keyword}%`) },
+              { tenant_id, client: Like(`%${query.keyword}%`) }
+            ]
+          : {
+              tenant_id,
+              name: query.name ? Like(`%${query.name}%`) : void 0,
+              client: query.client ? Like(`%${query.client}%`) : void 0,
+              create_at:
+                query.create_at_start && query.create_at_end
+                  ? Between(new Date(query.create_at_start), new Date(query.create_at_end))
+                  : void 0
+            },
         relations: { owner: true },
         order: query.order_by,
         ...qianliQuery.option
