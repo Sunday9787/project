@@ -1,27 +1,21 @@
-<template>
-  <view class="project-card" @click="toDetail()">
-    <view class="project-card__status">
-      <text class="project-card--time">{{ item.create_at }}</text>
-      <view class="flex-1" />
-      <wd-text size="28rpx" :type="item.statusMap.type" :text="item.statusMap.text" />
-    </view>
+<template lang="pug">
+view.project-card(@click="toDetail()")
+  view.project-card__status
+    text.project-card--time {{ item.create_at }}
+    view.flex-1
+    wd-text(size="28rpx" :type="item.statusMap.type" :text="item.statusMap.text")
 
-    <h1 class="project-card__title line-1">
-      <text>{{ item.name }}</text>
-    </h1>
-    <p class="project-card__line line-1">
-      <text>委托单位：</text>
-      <text>{{ item.client }}</text>
-    </p>
-    <p class="project-card__line line-1">
-      <text>项目地址：</text>
-      <text>{{ item.location }}</text>
-    </p>
-    <p class="project-card__footer">
-      <text>负责人：</text>
-      <wd-tag type="primary" round>{{ item.owner.nickname }}</wd-tag>
-    </p>
-  </view>
+  h1.project-card__title.line-1
+    text {{ item.name }}
+  p.project-card__line.line-1
+    text 委托单位：
+    text {{ item.client }}
+  p.project-card__line.line-1
+    text 项目地址：
+    text {{ item.location }}
+  p.project-card__footer
+    text 负责人：
+    wd-tag(type="primary" round) {{ item.ownerName }}
 </template>
 
 <script lang="ts" setup>

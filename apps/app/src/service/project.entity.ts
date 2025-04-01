@@ -1,10 +1,9 @@
 import { Expose, Type } from 'class-transformer'
 
-import { AbstractEntity, EntityJSON } from '@/class/abstractEntity'
+import { AbstractEntity, BaseEntity, type EntityJSON } from '@/class/abstract.entity'
+import { useCacheModule } from '@/store/cache'
 
-import { UserEntity } from './auth.entity'
 import { ProjectService } from './project.service'
-import { SurveyEntity } from './survey.entity'
 
 export enum ProjectStatus {
   /** 未保全 */
@@ -46,6 +45,10 @@ export class ProjectItemEntity extends AbstractEntity {
   @Expose() name: string
   @Expose() client: string
   @Expose() owner_id: number
+  get ownerName() {
+    const cacheModule = useCacheModule()
+    return cacheModule.userMap.get(this.owner_id)?.nickname || '-'
+  }
   @Expose() location: string
 
   @Expose()
@@ -53,36 +56,43 @@ export class ProjectItemEntity extends AbstractEntity {
   get statusMap() {
     return ProjectItemEntity.statusMap.get(this.status)!
   }
-
-  @Expose()
-  @Type(() => UserEntity)
-  owner: UserEntity = new UserEntity()
 }
 
 export type ProjectEntityJSON = EntityJSON<ProjectEntity>
 
 export class ProjectEntity extends ProjectItemEntity {
-  constructor(id = 0) {
+  static detail(id: number) {
+    return AbstractEntity.wrapper(ProjectEntity, ProjectEntity.server.detail(id))
+  }
+
+  constructor(id: string) {
     super()
-    this.id = id
+    this.id = Number(id)
   }
 
   @Expose()
-  @Type(() => SurveyEntity)
-  survey: SurveyEntity[] = []
-  @Expose()
-  @Type(() => UserEntity)
-  members: UserEntity[] = []
+  @Type(() => BaseEntity)
+  members: BaseEntity[] = []
 
-  get investigatorUsers() {
-    if (!this.members.length) {
-      return '暂无调查员'
+  get selectMembers() {
+    if (this.members.length) {
+      return this.members.map(item => item.id)
     }
-
-    return this.members.map(item => item.nickname).join(',')
+    return []
+  }
+  set selectMembers(val: number[]) {
+    if (val.length) {
+      this.members = val.map(id => ({ id }))
+    } else {
+      this.members = []
+    }
   }
 
   detail() {
-    return AbstractEntity.wrapper(ProjectEntity, ProjectEntity.server.detail(this.id))
+    return ProjectEntity.detail(this.id)
+  }
+
+  save() {
+    return ProjectEntity.server.save(this.toJSON())
   }
 }

@@ -1,7 +1,8 @@
-import { AbstractService } from '@/class/abstractService'
+import { AbstractService } from '@/class/abstract.service'
 import { request } from '@/utils/request'
 
-import { type AuthEntityJSON, AuthLoginEntityResult } from './auth.entity'
+import type { AuthEntityJSON } from './auth.entity'
+import type { AuthLoginEntityResult } from './user.entity'
 
 export class AuthService extends AbstractService {
   readonly baseURL = '/auth'

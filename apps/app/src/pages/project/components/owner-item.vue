@@ -1,19 +1,15 @@
-<template>
-  <view class="owner-item">
-    <view class="owner-item__status">
-      <text class="owner-item--time">{{ item.create_at }}</text>
-      <view class="flex-1" />
-      <wd-text size="28rpx" :type="item.statusMap.type" :text="item.statusMap.text" />
-    </view>
+<template lang="pug">
+view.owner-item(@click="toDetail()")
+  view.owner-item__status
+    text.owner-item--time {{ item.create_at }}
+    view.flex-1
+    wd-text(size="28rpx" :type="item.statusMap.type" :text="item.statusMap.text")
 
-    <h1 class="owner-item__line line-1">
-      <text>房主姓名: {{ item.owner }}</text>
-    </h1>
+  h1.owner-item__line.line-1
+    text 房主姓名: {{ item.owner }}
 
-    <h1 class="owner-item__line line-1">
-      <text>身份证号: {{ item.id_card }}</text>
-    </h1>
-  </view>
+  h1.owner-item__line.line-1
+    text 身份证号: {{ item.id_card }}
 </template>
 
 <script lang="ts" setup>
@@ -23,7 +19,11 @@ interface Props {
   item: SurveyItemEntity
 }
 
-defineProps<Props>()
+const { item } = defineProps<Props>()
+
+function toDetail() {
+  uni.navigateTo({ url: `/pages/survey/action?id=${item.id}&type=add` })
+}
 </script>
 
 <style lang="scss">

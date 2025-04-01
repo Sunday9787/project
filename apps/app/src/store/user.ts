@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 
-import { AuthEntity, AuthLoginEntityResult } from '@/service/auth.entity'
+import { AuthEntity } from '@/service/auth.entity'
+import { AuthLoginEntityResult } from '@/service/user.entity'
 
 export const useUserModule = defineStore('userModule', {
   state() {

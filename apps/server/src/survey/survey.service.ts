@@ -37,7 +37,9 @@ export class SurveyService {
     entity.tenant_id = tenant_id
     entity.project = project
 
-    this.surveyRepository.save(entity)
+    const result = await this.surveyRepository.save(entity)
+
+    return result.id
   }
 
   all(query: SurveyQueryDTO, tenant_id: string) {

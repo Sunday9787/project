@@ -1,51 +1,48 @@
-<template>
-  <view class="page-view">
-    <wd-search
-      v-model="form.keyword"
-      placeholder="项目名称、委托单位"
-      placeholder-left
-      hide-cancel
-      :maxlength="10"
-      @search="onRefresh()" />
+<template lang="pug">
+view.page-view
+  wd-search(
+    v-model.trim="form.keyword"
+    placeholder="项目名称、委托单位"
+    placeholder-left
+    hide-cancel
+    :maxlength="10"
+    @search="onRefresh()")
 
-    <wd-gap />
+  wd-gap
 
-    <view class="view-container">
-      <text>共 <wd-text :text="data.total" type="primary" /> 条数据</text>
-    </view>
+  view.view-container
+    text
+      | 共&nbsp;
+      wd-text(:text="data.total" type="primary")
+      | &nbsp;条数据
 
-    <wd-gap />
+  wd-gap
 
-    <scroll-view
-      class="scroll-view view-container"
-      scroll-y
-      scroll-anchoring
-      refresher-enabled
-      :refresher-threshold="100"
-      :refresher-triggered="isTriggered"
-      @refresherrefresh="onRefresh"
-      @scrolltolower="onLoadMore">
-      <view v-if="data.loading" class="scroll-view-loading">
-        <wd-loading />
-      </view>
-      <wd-status-tip image="search" tip="当前搜索无结果" v-else-if="!data.list.length" />
+  scroll-view.scroll-view.view-container(
+    scroll-y
+    scroll-anchoring
+    refresher-enabled
+    :refresher-threshold="100"
+    :refresher-triggered="isTriggered"
+    @refresherrefresh="onRefresh"
+    @scrolltolower="onLoadMore")
+    view.scroll-view-loading(v-if="data.loading")
+      wd-loading
+    wd-status-tip(image="search" tip="当前搜索无结果" v-else-if="!data.list.length")
 
-      <template v-for="item of data.list" :key="item.id">
-        <wd-gap v-if="data.list.at(0) !== item" />
-        <project-card :item="item" />
-      </template>
+    template(v-for="item of data.list" :key="item.id")
+      wd-gap v-if="data.list.at(0) !== item"
+      project-card(:item="item")
 
-      <view class="loading-text">
-        <text v-if="data.loading">正在加载...</text>
-        <text v-if="isFinish">没有更多数据了~</text>
-      </view>
-    </scroll-view>
-  </view>
+    view.loading-text
+      text(v-if="data.loading") 正在加载...
+      text(v-if="isFinish") 没有更多数据了~
+wd-fab(position="right-bottom" direction="top" type="primary")
+  wd-button(type="primary" round @click="createProject()" custom-class="custom-button")
+    wd-icon(name="evaluation" size="44rpx")
 </template>
 
 <script lang="ts" setup>
-import { onLoad } from '@dcloudio/uni-app'
-
 import { RequestList, ResponsePage } from '@/class/page'
 import { ProjectItemEntity } from '@/service/project.entity'
 
@@ -91,4 +88,19 @@ async function search(bottom = false) {
     isTriggered.value = false
   }
 }
+
+function createProject() {
+  uni.navigateTo({ url: '/pages/project/action?type=add' })
+}
 </script>
+
+<style lang="scss">
+:deep(.custom-button) {
+  box-sizing: border-box;
+  width: 32px !important;
+  min-width: auto !important;
+  height: 32px !important;
+  margin: 8rpx;
+  border-radius: 16px !important;
+}
+</style>

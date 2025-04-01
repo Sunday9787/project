@@ -14,6 +14,12 @@
       }
     },
     {
+      "path": "pages/survey/action"
+    },
+    {
+      "path": "pages/project/action"
+    },
+    {
       "path": "pages/project/detail",
       "style": {
         "navigationBarTitleText": "项目详情"

@@ -1,8 +1,15 @@
 <script lang="ts" setup>
-import { onHide, onLaunch, onShow } from '@dcloudio/uni-app'
+import { useCacheModule } from './store/cache'
+import { useUserModule } from './store/user'
+
+const cacheModule = useCacheModule()
+const userModule = useUserModule()
 
 onLaunch(function () {
   console.log('App Launch')
+  if (userModule.access_token) {
+    cacheModule.cache()
+  }
 })
 
 onShow(function () {

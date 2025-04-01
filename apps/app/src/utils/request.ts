@@ -15,7 +15,7 @@ enum QyHttpStatus {
 }
 
 export function baseURL(url: string = '') {
-  return 'http://localhost:3000' + url
+  return 'http://192.168.31.168:3000' + url
 }
 
 const AxiosInstance = axios.create({
@@ -73,11 +73,15 @@ AxiosInstance.interceptors.response.use(function (response) {
     console.error(response.data)
 
     if (response.data.code === QyHttpStatus.TENANT_ID_NOT_FOUND) {
-      uni.showToast({ icon: 'error', title: '租户不存在' })
+      uni.showToast({
+        icon: 'error',
+        title: '租户不存在',
+        duration: 3000,
+        success() {
+          // uni.redirectTo({ url: '/pages/auth/auth' })
+        }
+      })
       console.error('租户不存在')
-      setTimeout(function () {
-        uni.redirectTo({ url: '/pages/auth/auth' })
-      }, 0)
       return Promise.reject(response)
     }
 
@@ -89,7 +93,7 @@ AxiosInstance.interceptors.response.use(function (response) {
       uni.showToast({ icon: 'error', title: 'token失效 请重新登录' })
       console.error('token失效 请重新登录')
       userModule.$reset()
-      window.setTimeout(function () {
+      setTimeout(function () {
         uni.redirectTo({ url: '/pages/auth/auth' })
       }, 0)
       return Promise.reject(response)

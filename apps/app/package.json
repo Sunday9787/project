@@ -53,6 +53,7 @@
     "@dcloudio/uni-mp-weixin": "3.0.0-4040520250104002",
     "@dcloudio/uni-mp-xhs": "3.0.0-4040520250104002",
     "@dcloudio/uni-quickapp-webview": "3.0.0-4040520250104002",
+    "@repo/amap": "workspace:^",
     "axios": "^1.7.7",
     "pinia": "^2.0.33",
     "pinia-plugin-persistedstate": "^2.1.0",
@@ -71,8 +72,10 @@
     "@repo/stylelint-config": "workspace:^",
     "@types/qs": "^6.9.18",
     "@vue/runtime-core": "^3.4.21",
+    "@vue/tsconfig": "^0.7.0",
     "miniprogram-api-typings": "^4.0.5",
     "sass": "^1.78.0",
+    "typescript": "^5.8.2",
     "vite": "6.2.2"
   }
 }

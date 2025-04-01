@@ -6,6 +6,18 @@
   margin-top: 60rpx;
 }
 
+.flex {
+  display: flex;
+}
+
+.gap-x-2 {
+  column-gap: 16rpx;
+}
+
+.flex-end {
+  justify-content: flex-end;
+}
+
 .flex-1 {
   flex: 1;
 }
@@ -14,7 +26,22 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
   background-color: var(--bg-color);
+}
+
+.page-footer {
+  padding-right: 50rpx;
+  padding-left: 50rpx;
+  margin-top: 80rpx;
+}
+
+.scroll-x {
+  overflow-x: auto;
+}
+
+.scroll-y {
+  overflow-y: auto;
 }
 
 .scroll-view {
@@ -56,11 +83,28 @@
   text-align: center;
 }
 
-.view-container {
-  padding-right: 30rpx;
-  padding-left: 30rpx;
+.text-center {
+  text-align: center;
 }
 
 .text-right {
   text-align: right;
+}
+
+.h1 {
+  font-size: 96rpx;
+}
+
+.h2 {
+  font-size: 72rpx;
+}
+
+.h3 {
+  font-size: 56rpx;
+}
+
+.h1,
+.h2,
+.h3 {
+  font-weight: bold;
 }

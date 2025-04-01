@@ -26,7 +26,7 @@ declare namespace Utils {
   type ActionType = 'edit' | 'add' | 'detail'
 
   interface ActionProps {
-    id: number
+    id: string
     type: ActionType
   }
 

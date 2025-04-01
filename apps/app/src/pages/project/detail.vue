@@ -1,86 +1,86 @@
-<template>
-  <view class="page-view" style="height: 100vh">
-    <wd-tabs sticky v-model="tab" auto-line-width swipeable animated id="tabs">
-      <wd-tab name="project" title="项目信息">
-        <wd-cell-group custom-class="view-container">
-          <wd-cell title-width="160rpx" title="项目名称" :value="project.name" />
-          <wd-cell border title-width="160rpx" title="委托单位" :value="project.client" />
-          <wd-cell border title-width="160rpx" title="项目所在地" :value="project.location" />
-          <wd-cell border title-width="160rpx" title="业务负责人" :value="project.owner.nickname" />
-          <wd-cell border title-width="160rpx" title="进度状态">
-            <wd-text size="28rpx" :type="project.statusMap.type" :text="project.statusMap.text" />
-          </wd-cell>
-          <wd-cell border title-width="160rpx" title="调查人员" :value="project.investigatorUsers" />
-        </wd-cell-group>
-      </wd-tab>
+<template lang="pug">
+view.page-view(style="height: 100vh")
+  wd-tabs(sticky v-model="tab" auto-line-width swipeable animated id="tabs")
+    wd-tab(name="project" title="项目信息")
+      wd-cell-group(border)
+        view.view-container
+          wd-cell(title-width="160rpx" title="项目名称" :value="project.name")
+          wd-cell( title-width="160rpx" title="委托单位" :value="project.client")
+          wd-cell( title-width="160rpx" title="项目所在地" :value="project.location")
+          wd-cell( title-width="160rpx" title="业务负责人" :value="project.ownerName")
+          wd-cell( title-width="160rpx" title="进度状")
+            wd-text(size="28rpx" :type="project.statusMap.type" :text="project.statusMap.text")
+          wd-select-picker(v-model="project.selectMembers" readonly :columns="surveyUsers" placeholder="暂无调查人员" label="调查人员" type="checkbox" label-key="nickname" value-key="id")
+          wd-cell
+            wd-button(type="primary" v-if="!userModule.isSurveyor" @click="editProject()") 编辑
 
-      <wd-tab name="survey" title="调查名单">
-        <view class="page-view">
-          <wd-search
-            sticky
-            v-model="form.keyword"
-            placeholder="房主姓名/身份证号"
-            placeholder-left
-            hide-cancel
-            :maxlength="10"
-            @search="onRefresh()"
-            id="wd-search" />
+    wd-tab(name="survey" title="调查名单")
+      view.page-view(:style="pageViewStyle")
+        wd-search(
+          sticky
+          v-model.trim="form.keyword"
+          placeholder="房主姓名/身份证号"
+          placeholder-left
+          hide-cancel
+          :maxlength="10"
+          @search="onRefresh()"
+          id="wd-search"
+          custom-style="width: 100vw")
 
-          <wd-gap />
+        wd-gap
 
-          <view class="view-container">
-            <text>共 <wd-text :text="data.total" type="primary" /> 条数据</text>
-          </view>
+        view.view-container
+          text
+            | 共&nbsp;
+            wd-text(:text="data.total" type="primary")
+            | &nbsp;条数据
 
-          <wd-gap />
+        wd-gap
 
-          <scroll-view
-            class="scroll-view view-container"
-            scroll-y
-            scroll-anchoring
-            refresher-enabled
-            :refresher-threshold="100"
-            :refresher-triggered="isTriggered"
-            @refresherrefresh="onRefresh"
-            @scrolltolower="onLoadMore">
-            <view v-if="data.loading" class="scroll-view-loading">
-              <wd-loading />
-            </view>
+        scroll-view.scroll-view.view-container(
+          scroll-y
+          scroll-anchoring
+          refresher-enabled
+          :refresher-threshold="100"
+          :refresher-triggered="isTriggered"
+          @refresherrefresh="onRefresh"
+          @scrolltolower="onLoadMore")
+          view.scroll-view-loading(v-if="data.loading")
+            wd-loading
 
-            <wd-status-tip image="search" tip="当前搜索无结果" v-else-if="!data.list.length" />
+          wd-status-tip(image="search" tip="当前搜索无结果" v-else-if="!data.list.length")
 
-            <template v-for="item of data.list" :key="item.id">
-              <wd-gap v-if="data.list.at(0) !== item" />
-              <owner-item :item="item" />
-            </template>
+          template(v-for="item of data.list" :key="item.id")
+            wd-gap(v-if="data.list.at(0) !== item")
+            owner-item(:item="item")
 
-            <view class="loading-text">
-              <text v-if="data.loading">正在加载...</text>
-              <text v-if="isFinish">没有更多数据了~</text>
-            </view>
-          </scroll-view>
-        </view>
-      </wd-tab>
-    </wd-tabs>
-  </view>
+          view.loading-text
+            text(v-if="data.loading") 正在加载...
+            text(v-if="isFinish") 没有更多数据了~
 </template>
 
 <script lang="ts" setup>
-import { onLoad, onReady } from '@dcloudio/uni-app'
-
 import { RequestList, ResponsePage } from '@/class/page'
 import { SurveyItemEntity } from '@/service/survey.entity'
+import { useCacheModule } from '@/store/cache'
+import { useUserModule } from '@/store/user'
 
 import OwnerItem from './components/owner-item.vue'
 import { useProject } from './hooks'
 
 interface Props {
-  id: number
+  id: string
 }
 
+const userModule = useUserModule()
+const cacheModule = useCacheModule()
 const props = defineProps<Props>()
 const tab = ref<number>(0)
-const project = useProject({ type: 'detail', id: props.id })
+const { project, refresh } = useProject({ type: 'detail', id: props.id })
+
+const surveyUsers = computed(function () {
+  return cacheModule.users.filter(item => item.id !== userModule.id)
+})
 
 /**
  * 当前下拉刷新状态
@@ -91,21 +91,27 @@ const form = reactive(SurveyItemEntity.form())
 const page = reactive(new RequestList())
 const data = reactive(new ResponsePage<SurveyItemEntity>())
 const instance = getCurrentInstance()!
+const pageViewStyle = reactive({ height: '100%' })
 
 onLoad(onRefresh)
+
+onShow(function () {
+  if (project.value.owner_id) {
+    refresh()
+  }
+})
+
+/**
+ * FIXME: 解决调查名单 scroll-view 无法滚动
+ */
 onReady(function () {
   const query = uni.createSelectorQuery().in(instance.proxy)
   const elTab = query.select('#tabs >>> .wd-tabs__nav-item')
-  const elSearch = query.select('#wd-search >>> .wd-search')
-  elSearch
-    .boundingClientRect(function (data) {
-      console.log('elSearch', data)
-    })
-    .exec()
 
   elTab
     .boundingClientRect(function (data) {
-      console.log('elTab', data)
+      if (data instanceof Array) return
+      pageViewStyle.height = `calc(100vh - ${data.height}px)`
     })
     .exec()
 })
@@ -138,5 +144,9 @@ async function search(bottom = false) {
     data.loading = false
     isTriggered.value = false
   }
+}
+
+function editProject() {
+  uni.navigateTo({ url: `/pages/project/action?id=${props.id}&type=edit` })
 }
 </script>

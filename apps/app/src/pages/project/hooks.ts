@@ -1,17 +1,18 @@
-import { onLoad } from '@dcloudio/uni-app'
-
+import { useLoading } from '@/hooks/useLoading'
 import { ProjectEntity } from '@/service/project.entity'
 
 export function useProject(props: Utils.ActionProps) {
   const project = ref<ProjectEntity>(new ProjectEntity(props.id))
 
-  onLoad(function () {
+  const { loading, refresh } = useLoading(function (request) {
     if (props.type !== 'add') {
-      project.value.detail().then(function (response) {
-        project.value = response
+      request(async function () {
+        project.value.detail().then(function (response) {
+          project.value = response
+        })
       })
     }
   })
 
-  return project
+  return { project, loading, refresh }
 }
