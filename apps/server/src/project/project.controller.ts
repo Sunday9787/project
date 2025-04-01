@@ -1,4 +1,3 @@
-import { CacheInterceptor } from '@nestjs/cache-manager'
 import {
   Body,
   Controller,
@@ -11,7 +10,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  UseInterceptors
+  Res
 } from '@nestjs/common'
 import { TenantId } from 'src/common/decorator/tenant'
 import { User } from 'src/common/decorator/user'
@@ -33,7 +32,8 @@ export class ProjectController {
   @HttpCode(HttpStatus.OK)
   @Put('save')
   save(@Body() data: ProjectDTO, @TenantId() tenant_id: string, @User() payload: JwtPayload) {
-    return this.service.save(data, tenant_id, payload)
+    const { members, ...base } = data
+    return this.service.save(base, members, tenant_id, payload)
   }
 
   @HttpCode(HttpStatus.OK)

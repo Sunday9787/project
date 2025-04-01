@@ -38,7 +38,7 @@ export class SurveyEntity extends BaseEntity {
   @Column({ type: 'integer', comment: '建筑面积 平方米' })
   building_area: number
 
-  @Column({ type: 'timestamp', comment: '保全日期' })
+  @Column({ type: 'timestamp', default: null, comment: '保全日期' })
   preservation_date: Date
 
   @Column({ type: 'varchar', comment: '房屋主图' })

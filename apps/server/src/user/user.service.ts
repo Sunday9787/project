@@ -73,4 +73,10 @@ export class UserService {
         return qianliQuery.data(result)
       })
   }
+
+  cache() {
+    return this.repository.find().then(function (entity) {
+      return plainToInstance(ResponseUserDTO, entity)
+    })
+  }
 }

@@ -11,6 +11,7 @@ import { TenantGuard } from './common/guard/tenant'
 import { ProjectModule } from './project/project.module'
 import { RedisModule } from './redis/redis.module'
 import { SurveyModule } from './survey/survey.module'
+import { UploadModule } from './upload/upload.module'
 import { UserModule } from './user/user.module'
 
 @Module({
@@ -42,7 +43,8 @@ import { UserModule } from './user/user.module'
     AuthModule,
     UserModule,
     ProjectModule,
-    SurveyModule
+    SurveyModule,
+    UploadModule
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: TenantGuard }, { provide: APP_GUARD, useClass: JwtAuthGuard }]

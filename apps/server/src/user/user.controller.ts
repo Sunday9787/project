@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -11,6 +12,7 @@ import {
   Put,
   UseInterceptors
 } from '@nestjs/common'
+import { Public } from 'src/common/decorator/public'
 import { TenantId } from 'src/common/decorator/tenant'
 
 import { UserDTO, UserForgetDTO, UserQueryDTO } from './user.dto'
@@ -24,6 +26,13 @@ export class UserController {
   @Put('save')
   save(@Body() body: UserDTO, @TenantId() tenant_id: string) {
     return this.userService.save(body, tenant_id)
+  }
+
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @Get('cache')
+  cache() {
+    return this.userService.cache()
   }
 
   @HttpCode(HttpStatus.OK)

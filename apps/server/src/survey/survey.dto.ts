@@ -1,6 +1,6 @@
 import { Transform, Type } from 'class-transformer'
 import { IsDate, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator'
-import { BaseDTO, QueryBaseOrderDTO, ResponseBaseDTO, QueryOrderByType } from 'src/common/base.dto'
+import { BaseDTO, QueryBaseOrderDTO, QueryOrderByType, ResponseBaseDTO } from 'src/common/base.dto'
 import { ListQueryDTO } from 'src/common/query'
 import { IsChineseIDCard } from 'src/common/validate/id.card'
 
@@ -68,10 +68,6 @@ export class SurveyDTO extends BaseDTO {
   @Min(1, { message: '建筑面积不得小于1' })
   @IsNotEmpty({ message: '建筑面积不得为空' })
   building_area: number
-
-  @Transform(val => new Date(val.value))
-  @IsDate({ message: '日期不合法' })
-  preservation_date: Date
 
   @IsString()
   @IsNotEmpty({ message: '房屋主图不得为空' })

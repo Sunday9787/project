@@ -1,12 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
+import { BaseDTO } from 'src/common/base.dto'
 import { QyHttpException, QyHttpStatus } from 'src/common/exception/http.exception'
 import { QiyueQuery } from 'src/common/query'
+import { DocService } from 'src/doc/doc.service'
+import { UserEntity } from 'src/user/user.entity'
 import { UserService } from 'src/user/user.service'
 import { Between, Like, Repository } from 'typeorm'
 
-import { ProjectDTO, ProjectQueryDTO, ResponseProjectDTO } from './project.dto'
+import { ProjectBaseDTO, ProjectQueryDTO, ResponseProjectDTO } from './project.dto'
 import { ProjectEntity } from './project.entity'
 
 @Injectable()
@@ -22,23 +25,31 @@ export class ProjectService {
         id,
         tenant_id
       },
-      relations: { survey: true, members: true, owner: true }
+      select: {
+        members: { id: true }
+      },
+      relations: { members: true }
     })
 
     return plainToInstance(ResponseProjectDTO, data)
   }
 
-  async save(data: ProjectDTO, tenant_id: string, payload: JwtPayload) {
+  async save(data: ProjectBaseDTO, members: BaseDTO[], tenant_id: string, payload: JwtPayload) {
     const entity = this.repository.create(data)
     const user = await this.userService.findById(payload.id)
-
     if (!user) {
-      throw new QyHttpException('创建失败', QyHttpStatus.BAD_REQUEST)
+      throw new QyHttpException('创建失败:创建人不存在', QyHttpStatus.BAD_REQUEST)
+    }
+
+    const result = await Promise.all(members.map(item => this.userService.findById(item.id)))
+
+    if (result.some(item => !item)) {
+      throw new QyHttpException('创建失败:成员不存在', QyHttpStatus.BAD_REQUEST)
     }
 
     entity.owner = user
+    entity.members = result as UserEntity[]
     entity.tenant_id = tenant_id
-
     await this.repository.save(entity)
   }
 
@@ -67,7 +78,6 @@ export class ProjectService {
                   ? Between(new Date(query.create_at_start), new Date(query.create_at_end))
                   : void 0
             },
-        relations: { owner: true },
         order: query.order_by,
         ...qianliQuery.option
       })

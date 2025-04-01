@@ -40,11 +40,12 @@ export class TenantGuard implements CanActivate {
 
     const key = createTenantKey(req.tenant_id)
     const tenant = await this.redisService.cacheManager.get<string>(key)
-    Logger.log(tenant, 'TenantID')
 
     if (!tenant) {
-      throw new QyHttpException('租户不存在', QyHttpStatus.TENANT_ID_NOT_FOUND)
+      await this.redisService.cacheManager.set(key, tenant_id)
     }
+
+    Logger.log(key, 'TenantID')
 
     return !!tenant
   }
