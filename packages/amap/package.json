@@ -1,0 +1,16 @@
+{
+  "name": "@repo/amap",
+  "version": "1.0.0",
+  "description": "高德地图SDK",
+  "exports": {
+    "./wx": {
+      "import": "./wx/amap-wx.130.js",
+      "require": "./wx/amap-wx.130.js",
+      "types": "./wx/amap-wx.130.d.ts"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.4.1"
+}
