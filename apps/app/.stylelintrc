@@ -19,6 +19,9 @@
   "rules": {
     "declaration-property-value-no-unknown": null,
     "selector-type-no-unknown": [true, { "ignoreTypes": ["page", "navigator", "swiper", "scroll-view"] }],
+    "selector-pseudo-class-no-unknown": [true, {
+      "ignorePseudoClasses": ["deep"]
+    }],
     "unit-no-unknown": [
       true,
       {

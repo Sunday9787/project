@@ -1,11 +1,17 @@
 // tsconfig.json
 {
+  "vueCompilerOptions": {
+    "plugins": ["@vue/language-plugin-pug"]
+  },
+  "extends": "@vue/tsconfig/tsconfig.json",
   "compilerOptions": {
-    "target": "ES6",
-    "module": "esnext",
+    "target": "ESNext",
+    "module": "NodeNext",
     "strict": true,
     "jsx": "preserve",
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
+    "moduleDetection": "auto",
+    "verbatimModuleSyntax": false,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "esModuleInterop": true,
@@ -19,16 +25,16 @@
       "esnext",
       "dom"
     ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
     "types": [
       "@dcloudio/types",
       "wot-design-uni/global",
       "miniprogram-api-typings"
     ],
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
   },
   "include": ["./src"],
   "exclude": [
