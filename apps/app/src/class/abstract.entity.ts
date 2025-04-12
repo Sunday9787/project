@@ -21,6 +21,8 @@ export interface AbstractEntityMethod {
   process?(): unknown
   logIn?(): unknown
   logOut?(): unknown
+  init?(): void
+  reset?(): void
   /** 复制 数据到 当前实例 */
   copy?(data: unknown): void
 }
@@ -28,6 +30,8 @@ export interface AbstractEntityMethod {
 export class BaseEntity {
   @Expose() id = 0
 }
+
+const valueWeakMap = new WeakMap<AbstractEntity, Record<string, unknown>>()
 
 export abstract class AbstractEntity extends BaseEntity {
   public static toJSON<T extends object>(context: T) {
@@ -58,6 +62,11 @@ export abstract class AbstractEntity extends BaseEntity {
   @Transform(val => formatDate(val.value))
   readonly update_at: Date
 
+  constructor() {
+    super()
+    valueWeakMap.set(this, this.toJSON())
+  }
+
   public async doBuildFormData(option: UploadBuildFormDataOption, uploadService: UploadService) {
     const cacheModule = useCacheModule()
     const config = new OSSFormData()
@@ -72,6 +81,14 @@ export abstract class AbstractEntity extends BaseEntity {
     config.key = uploadService.generateFileName(cacheModule.oss!, option.file)
 
     option.resolve(config)
+  }
+
+  public reset() {
+    const context = toRaw(this)
+    const that = this as Record<string, unknown>
+    const data = valueWeakMap.get(context)!
+
+    for (const [key, value] of Object.entries(data)) that[key] = value
   }
 
   public toJSON() {

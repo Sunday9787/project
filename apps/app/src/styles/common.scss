@@ -56,6 +56,12 @@
   height: 100%;
 }
 
+.view-container {
+  width: 100vw;
+  padding-right: 30rpx;
+  padding-left: 30rpx;
+}
+
 .line-1 {
   @include ellipsis;
 }

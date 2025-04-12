@@ -72,13 +72,26 @@ AxiosInstance.interceptors.response.use(function (response) {
   if (response.data.code !== QyHttpStatus.OK_REQUEST) {
     console.error(response.data)
 
+    if (response.data.code === QyHttpStatus.USER_NOT_FOUND) {
+      uni.showToast({
+        icon: 'error',
+        title: '用户不存在',
+        duration: 1000
+      })
+
+      console.error('用户不存在')
+      return Promise.reject(response)
+    }
+
     if (response.data.code === QyHttpStatus.TENANT_ID_NOT_FOUND) {
       uni.showToast({
         icon: 'error',
         title: '租户不存在',
-        duration: 3000,
+        duration: 1000,
         success() {
-          // uni.redirectTo({ url: '/pages/auth/auth' })
+          setTimeout(function () {
+            uni.redirectTo({ url: '/pages/auth/auth' })
+          }, 1000)
         }
       })
       console.error('租户不存在')
@@ -90,12 +103,17 @@ AxiosInstance.interceptors.response.use(function (response) {
       response.data.code === QyHttpStatus.USER_REFRESH_TOKEN_INVALID ||
       response.data.code === QyHttpStatus.USER_TOKEN_INVALID
     ) {
-      uni.showToast({ icon: 'error', title: 'token失效 请重新登录' })
+      uni.showToast({
+        icon: 'error',
+        title: 'token失效 请重新登录',
+        success() {
+          userModule.$reset()
+          setTimeout(function () {
+            uni.redirectTo({ url: '/pages/auth/auth' })
+          }, 1000)
+        }
+      })
       console.error('token失效 请重新登录')
-      userModule.$reset()
-      setTimeout(function () {
-        uni.redirectTo({ url: '/pages/auth/auth' })
-      }, 0)
       return Promise.reject(response)
     }
 
