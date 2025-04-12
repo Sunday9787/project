@@ -2,15 +2,16 @@
 view.page-view
   wd-form(:model="project" ref="formInst")
     wd-cell-group(border)
-      wd-input(label="项目名称" v-model="project.name" :rules="[{required: true, message: '请输入'}]")
-      wd-input(label="委托单位" v-model="project.client" :rules="[{required: true, message: '请输入'}]")
-      wd-input(label="项目所在地" v-model="project.location" :rules="[{required: true, message: '请输入'}]")
+      wd-input(label="项目名称" prop="name" v-model="project.name" :rules="[{required: true, message: '请输入项目名称'}]")
+      wd-input(label="委托单位" prop="client" v-model="project.client" :rules="[{required: true, message: '请输入委托单位'}]")
+      wd-input(label="项目所在地" prop="location" v-model="project.location" :rules="[{required: true, message: '请输入项目所在地'}]")
       wd-cell(title="业务负责人" :value="userModule.nickname")
       wd-select-picker(
         :columns="surveyUsers"
         v-model="project.selectMembers"
         label="调查人员"
         type="checkbox"
+        prop="members"
         label-key="nickname"
         value-key="id"
         filterable)
@@ -47,6 +48,7 @@ const surveyUsers = computed(function () {
 onLoad(function () {
   const title = props.type === 'edit' ? '编辑项目' : '创建项目'
   uni.setNavigationBarTitle({ title })
+  uni.removeStorageSync('project:action:refresh')
 })
 
 async function submit() {
@@ -56,7 +58,8 @@ async function submit() {
 
   const result = await formInst.value.validate()
   if (result.valid) {
-    project.value.save()
+    await project.value.save()
+    uni.setStorageSync('project:action:refresh', 'need')
     uni.navigateBack()
   }
 }

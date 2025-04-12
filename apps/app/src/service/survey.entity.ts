@@ -1,10 +1,10 @@
-import { Expose } from 'class-transformer'
+import { Expose, Type } from 'class-transformer'
 import type { UploadBuildFormDataOption } from 'wot-design-uni/components/wd-upload/types'
 import type { UploadFile } from 'wot-design-uni/components/wd-upload/types'
 
 import { AbstractEntity, type EntityJSON } from '@/class/abstract.entity'
 
-import { SurveyDetailService, SurveyService } from './survey.service'
+import { SurveyItemService, SurveyService } from './survey.service'
 import { UploadService } from './upload.service'
 
 type StatusMap = { text: string; type: Utils.StatusType }
@@ -141,9 +141,9 @@ export class SurveyEntity extends SurveyItemEntity {
     return AbstractEntity.wrapper(SurveyEntity, SurveyEntity.server.detail(id))
   }
 
-  constructor(project_id: string) {
+  constructor(id: number) {
     super()
-    this.project_id = +project_id
+    this.id = id
   }
 
   /**
@@ -162,7 +162,7 @@ export class SurveyEntity extends SurveyItemEntity {
   /**
    * 事故距离
    */
-  @Expose() distance: number
+  @Expose() distance = 0
   /**
    * 房屋坐落
    */
@@ -216,13 +216,22 @@ export class SurveyEntity extends SurveyItemEntity {
   }
 }
 
-export type SurveyDetailEntityJSON = EntityJSON<SurveyDetailEntity>
+export type SurveyDetailItemEntityJSON = EntityJSON<SurveyDetailItemEntity>
 
-export class SurveyDetailEntity extends AbstractEntity {
-  private static service = new SurveyDetailService()
+export class SurveyDetailItemEntity extends AbstractEntity {
+  private static service = new SurveyItemService()
 
   public static list(survey_id: number) {
-    return SurveyDetailEntity.service.list(survey_id)
+    return AbstractEntity.wrapper(SurveyDetailItemEntity, SurveyDetailItemEntity.service.list(survey_id))
+  }
+
+  public static detail(id: number) {
+    return AbstractEntity.wrapper(SurveyDetailItemEntity, SurveyDetailItemEntity.service.detail(id))
+  }
+
+  constructor(survey_id = 0) {
+    super()
+    this.survey_id = survey_id
   }
 
   /**
@@ -238,22 +247,41 @@ export class SurveyDetailEntity extends AbstractEntity {
    */
   @Expose() desc: string
   /**
+   * 备注
+   */
+  @Expose() remark: string
+  /**
    * 受损图片
    */
-  @Expose() img: SurveyDetailImgDTO[]
+  @Expose() img: string
+  images: UploadFile[] = []
+
+  buildFormData(option: UploadBuildFormDataOption) {
+    return this.doBuildFormData(option, uploadService)
+  }
 
   save() {
-    return SurveyDetailEntity.service.save(this.toJSON())
+    return SurveyDetailItemEntity.service.save(this.toJSON())
   }
 }
 
-/**
- * SurveyDetailImgDTO
- */
-export class SurveyDetailImgDTO extends AbstractEntity {
-  /**
-   * 调查详情id
-   */
-  @Expose() survey_detail_id: number
-  @Expose() url: string
+export type SurveyDetailItemListJSON = EntityJSON<SurveyDetailItemListEntity>
+
+export class SurveyDetailItemListEntity extends AbstractEntity {
+  private static service = new SurveyItemService()
+  public static data(id: number) {
+    return AbstractEntity.wrapper(SurveyDetailItemEntity, SurveyDetailItemListEntity.service.list(id))
+  }
+
+  @Expose()
+  @Type(() => SurveyDetailItemEntity)
+  list: SurveyDetailItemEntity[] = []
+  constructor(id: number) {
+    super()
+    this.id = id
+  }
+
+  public data() {
+    return SurveyDetailItemListEntity.data(this.id)
+  }
 }

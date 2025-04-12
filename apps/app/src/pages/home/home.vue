@@ -58,6 +58,12 @@ const form = reactive(ProjectItemEntity.form())
 const data = reactive(new ResponsePage<ProjectItemEntity>())
 
 onLoad(onRefresh)
+onShow(function () {
+  const value = uni.getStorageSync<'need' | void>('project:action:refresh')
+  if (value === 'need') {
+    onRefresh()
+  }
+})
 
 function onRefresh() {
   isTriggered.value = true

@@ -22,7 +22,7 @@ interface Props {
 const { item } = defineProps<Props>()
 
 function toDetail() {
-  uni.navigateTo({ url: `/pages/survey/action?id=${item.id}&type=add` })
+  uni.navigateTo({ url: `/pages/survey/action?id=${item.id}&type=edit` })
 }
 </script>
 

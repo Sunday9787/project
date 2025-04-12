@@ -1,10 +1,9 @@
-import type { BaseEntity } from '@/class/abstract.entity'
 import { AbstractService } from '@/class/abstract.service'
 import { request } from '@/utils/request'
 
 import type {
-  SurveyDetailEntity,
-  SurveyDetailEntityJSON,
+  SurveyDetailItemEntity,
+  SurveyDetailItemEntityJSON,
   SurveyEntity,
   SurveyEntityJSON,
   SurveyItemEntity,
@@ -19,7 +18,7 @@ export class SurveyService extends AbstractService {
   }
 
   detail(id: number) {
-    return request.get<SurveyEntity>(this.baseURL + `/detail/${id}`)
+    return request.get<SurveyEntity>(this.baseURL + '/detail', { params: { id } })
   }
 
   save(data: SurveyEntityJSON) {
@@ -27,14 +26,18 @@ export class SurveyService extends AbstractService {
   }
 }
 
-export class SurveyDetailService extends AbstractService {
-  baseURL = '/survey/detail'
+export class SurveyItemService extends AbstractService {
+  baseURL = '/survey/item'
 
   list(survey_id: number) {
-    return request.get<SurveyDetailEntity[]>(this.baseURL + '/list', { params: { survey_id } })
+    return request.get<SurveyDetailItemEntity[]>(this.baseURL + '/list', { params: { survey_id } })
   }
 
-  save(data: SurveyDetailEntityJSON) {
+  save(data: SurveyDetailItemEntityJSON) {
     return request.put(this.baseURL + '/save', data)
+  }
+
+  detail(id: number) {
+    return request.get<SurveyDetailItemEntity>(this.baseURL + '/detail', { params: { id } })
   }
 }

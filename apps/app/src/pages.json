@@ -6,7 +6,8 @@
       "^wd-(.*)": "wot-design-uni/components/wd-$1/wd-$1.vue"
     }
   },
-  "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+  "pages": [
+    //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
       "path": "pages/home/home",
       "style": {
@@ -15,6 +16,12 @@
     },
     {
       "path": "pages/survey/action"
+    },
+    {
+      "path": "pages/survey/item"
+    },
+    {
+      "path": "pages/survey/index"
     },
     {
       "path": "pages/project/action"

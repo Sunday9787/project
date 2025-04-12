@@ -5,12 +5,20 @@ view.page-view(style="height: 100vh")
       wd-cell-group(border)
         view.view-container
           wd-cell(title-width="160rpx" title="项目名称" :value="project.name")
-          wd-cell( title-width="160rpx" title="委托单位" :value="project.client")
-          wd-cell( title-width="160rpx" title="项目所在地" :value="project.location")
-          wd-cell( title-width="160rpx" title="业务负责人" :value="project.ownerName")
-          wd-cell( title-width="160rpx" title="进度状")
+          wd-cell(title-width="160rpx" title="委托单位" :value="project.client")
+          wd-cell(title-width="160rpx" title="项目所在地" :value="project.location")
+          wd-cell(title-width="160rpx" title="业务负责人" :value="project.ownerName")
+          wd-cell(title-width="160rpx" title="进度状态")
             wd-text(size="28rpx" :type="project.statusMap.type" :text="project.statusMap.text")
-          wd-select-picker(v-model="project.selectMembers" readonly :columns="surveyUsers" placeholder="暂无调查人员" label="调查人员" type="checkbox" label-key="nickname" value-key="id")
+          wd-select-picker(
+            v-model="project.selectMembers"
+            :columns="surveyUsers"
+            readonly
+            placeholder="暂无调查人员"
+            label="调查人员"
+            type="checkbox"
+            label-key="nickname"
+            value-key="id")
           wd-cell
             wd-button(type="primary" v-if="!userModule.isSurveyor" @click="editProject()") 编辑
 
@@ -57,6 +65,10 @@ view.page-view(style="height: 100vh")
           view.loading-text
             text(v-if="data.loading") 正在加载...
             text(v-if="isFinish") 没有更多数据了~
+
+wd-fab(position="right-bottom" direction="top" type="primary")
+  wd-button(type="primary" round @click="createSurvey()" custom-class="custom-button")
+    wd-icon(name="spool" size="44rpx")
 </template>
 
 <script lang="ts" setup>
@@ -72,9 +84,9 @@ interface Props {
   id: string
 }
 
+const props = defineProps<Props>()
 const userModule = useUserModule()
 const cacheModule = useCacheModule()
-const props = defineProps<Props>()
 const tab = ref<number>(0)
 const { project, refresh } = useProject({ type: 'detail', id: props.id })
 
@@ -146,7 +158,22 @@ async function search(bottom = false) {
   }
 }
 
+function createSurvey() {
+  uni.navigateTo({ url: `/pages/survey/action?project_id=${props.id}&type=add` })
+}
+
 function editProject() {
   uni.navigateTo({ url: `/pages/project/action?id=${props.id}&type=edit` })
 }
 </script>
+
+<style lang="scss">
+:deep(.custom-button) {
+  box-sizing: border-box;
+  width: 32px !important;
+  min-width: auto !important;
+  height: 32px !important;
+  margin: 8rpx;
+  border-radius: 16px !important;
+}
+</style>

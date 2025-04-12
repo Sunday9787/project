@@ -63,7 +63,7 @@ view.page-view.scroll-y
           image-mode="aspectFill"
           @success="(value) => uploadFileSuccess(ChooseImageType.building, value)")
 
-      wd-cell(title-width="200rpx" title="客户签名" prop="owner_signature_img" :rules="[{ required: true, message: '请上传房屋主图' }]")
+      wd-cell(title-width="200rpx" title="客户签名" prop="owner_signature_img" :rules="[{ required: true, message: '请上传客户签名图' }]")
         wd-button(size="small" type="info" @click="chooseImage(ChooseImageType.owner_signature)") 选择图片
         wd-upload(
           ref="ownerSignatureImgUploader"
@@ -100,7 +100,7 @@ view.page-view.scroll-y
           @success="(value) => uploadFileSuccess(ChooseImageType.property_plan, value)")
 
   view.page-footer
-    wd-button(type="success" size="small" block @click="submit()") 确认勘察
+    wd-button(type="success" block @click="submit()") 确认勘察
 
 canvas(canvas-id="canvas" id="canvas" hidpi :style="canvasStyle")
 </template>
@@ -112,11 +112,12 @@ import type { CalendarType } from 'wot-design-uni/components/wd-calendar-view/ty
 import type { FormInstance } from 'wot-design-uni/components/wd-form/types'
 import type { UploadSuccessEvent } from 'wot-design-uni/components/wd-upload/types'
 
+import { useWatermarkImage } from '@/hooks/useWatermarkImage'
 import { SurveyEntity } from '@/service/survey.entity'
 import { OSSFormData } from '@/service/upload.service'
 import { useCacheModule } from '@/store/cache'
 
-import { ChooseImageType, useSurvey, useUpload, useWatermarkImage } from './hooks'
+import { ChooseImageType, useSurvey, useUpload } from './hooks'
 
 interface Props {
   id: string
@@ -154,6 +155,11 @@ const canvasStyle = computed<StyleValue>(function () {
     height: watermarkImage.canvasHeight.value + 'px',
     width: watermarkImage.canvasWidth.value + 'px'
   }
+})
+
+onLoad(function () {
+  const title = props.type === 'edit' ? '编辑调查' : '创建调查'
+  uni.setNavigationBarTitle({ title })
 })
 
 function displayFormat(value: number | number[], type: CalendarType) {
@@ -215,11 +221,6 @@ function chooseImage(action: ChooseImageType) {
   })
 }
 
-function init() {
-  if (form.value.building_img) {
-  }
-}
-
 async function submit() {
   if (!fromInst.value) {
     throw new Error('未找到from实例')
@@ -229,11 +230,12 @@ async function submit() {
   if (result.valid) {
     // 将图片挂载到实体
     const id = await form.value.save()
+
+    uni.setStorageSync('owner', form.value.owner)
+    uni.setStorageSync('location', form.value.location)
     uni.navigateTo({ url: `/pages/survey/index?id=${id}&type=add` })
   }
 }
-
-onReady(init)
 </script>
 
 <style lang="scss">
