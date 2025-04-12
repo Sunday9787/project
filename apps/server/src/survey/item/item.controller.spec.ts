@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 
-import { SurveyDetailController } from './detail.controller'
+import { SurveyDetailController } from './item.controller'
 
 describe('DetailController', () => {
   let controller: SurveyDetailController

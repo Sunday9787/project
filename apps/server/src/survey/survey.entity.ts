@@ -2,7 +2,7 @@ import { BaseEntity } from 'src/common/base.entity'
 import { ProjectEntity } from 'src/project/project.entity'
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, RelationId } from 'typeorm'
 
-import { SurveyDetailEntity } from './detail/detail.entity'
+import { SurveyItemEntity } from './item/item.entity'
 import { SurveyPurposeHouse, SurveyStatus, SurveyStructure } from './survey.enum'
 
 @Entity('survey')
@@ -64,6 +64,6 @@ export class SurveyEntity extends BaseEntity {
   @JoinColumn({ name: 'project_id' })
   project: ProjectEntity
 
-  @OneToMany(() => SurveyDetailEntity, metadata => metadata.survey)
-  detail: SurveyDetailEntity[]
+  @OneToMany(() => SurveyItemEntity, metadata => metadata.survey)
+  item: SurveyItemEntity[]
 }

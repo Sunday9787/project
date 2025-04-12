@@ -22,7 +22,6 @@ import { ProjectService } from './project.service'
 export class ProjectController {
   constructor(@Inject(ProjectService) private readonly service: ProjectService) {}
 
-  @UseInterceptors(CacheInterceptor)
   @HttpCode(HttpStatus.OK)
   @Get('detail/:id')
   detail(@Param('id', ParseIntPipe) id: number, @TenantId() tenant_id: string) {

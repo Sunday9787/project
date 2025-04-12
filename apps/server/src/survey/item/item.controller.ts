@@ -1,12 +1,18 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Put, Query } from '@nestjs/common'
 import { TenantId } from 'src/common/decorator/tenant'
 
-import { SurveyDetailDTO } from './detail.dto'
-import { DetailService } from './detail.service'
+import { SurveyItemDTO } from './item.dto'
+import { SurveyItemService } from './item.service'
 
-@Controller('/survey/detail')
+@Controller('/survey/item')
 export class SurveyDetailController {
-  constructor(private readonly service: DetailService) {}
+  constructor(private readonly service: SurveyItemService) {}
+
+  @HttpCode(HttpStatus.OK)
+  @Get('detail')
+  detail(@Query('id', ParseIntPipe) id: number, @TenantId() tenant_id: string) {
+    return this.service.detail(id, tenant_id)
+  }
 
   @HttpCode(HttpStatus.OK)
   @Delete('del/:id')
@@ -16,7 +22,7 @@ export class SurveyDetailController {
 
   @HttpCode(HttpStatus.OK)
   @Put('save')
-  save(@Body() body: SurveyDetailDTO, @TenantId() tenant_id: string) {
+  save(@Body() body: SurveyItemDTO, @TenantId() tenant_id: string) {
     return this.service.save(body, tenant_id)
   }
 

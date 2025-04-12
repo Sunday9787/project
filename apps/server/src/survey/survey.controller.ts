@@ -1,17 +1,4 @@
-import { CacheInterceptor } from '@nestjs/cache-manager'
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Inject,
-  ParseIntPipe,
-  Post,
-  Put,
-  Query,
-  UseInterceptors
-} from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, HttpStatus, Inject, ParseIntPipe, Post, Put, Query } from '@nestjs/common'
 import { TenantId } from 'src/common/decorator/tenant'
 
 import { SurveyDTO, SurveyQueryDTO } from './survey.dto'
@@ -21,7 +8,6 @@ import { SurveyService } from './survey.service'
 export class SurveyController {
   constructor(@Inject(SurveyService) private readonly service: SurveyService) {}
 
-  @UseInterceptors(CacheInterceptor)
   @HttpCode(HttpStatus.OK)
   @Get('detail')
   data(@Query('id', ParseIntPipe) id: number, @TenantId() tenant_id: string) {

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { APP_GUARD } from '@nestjs/core'
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { AppController } from './app.controller'
@@ -8,9 +8,11 @@ import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
 import { JwtAuthGuard } from './auth/guard/jwt.guard'
 import { TenantGuard } from './common/guard/tenant'
+import { TenantInterceptor } from './common/interceptor/tenant.context.interceptor'
 import { ProjectModule } from './project/project.module'
 import { RedisModule } from './redis/redis.module'
 import { SurveyModule } from './survey/survey.module'
+import { TenantModule } from './tenant/tenant.module'
 import { UploadModule } from './upload/upload.module'
 import { UserModule } from './user/user.module'
 
@@ -40,6 +42,7 @@ import { UserModule } from './user/user.module'
       },
       inject: [ConfigService]
     }),
+    TenantModule,
     AuthModule,
     UserModule,
     ProjectModule,
@@ -47,6 +50,11 @@ import { UserModule } from './user/user.module'
     UploadModule
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_GUARD, useClass: TenantGuard }, { provide: APP_GUARD, useClass: JwtAuthGuard }]
+  providers: [
+    AppService,
+    { provide: APP_GUARD, useClass: TenantGuard },
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_INTERCEPTOR, useClass: TenantInterceptor }
+  ]
 })
 export class AppModule {}
