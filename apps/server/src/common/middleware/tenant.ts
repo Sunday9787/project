@@ -8,7 +8,7 @@ const WHITE_ROUTE_LIST = ['/auth/login', '/auth/code']
 @Injectable()
 export class TenantMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
-    const tenant_id = req.headers.tenant_id
+    const tenant_id = req.headers['tenant-id']
 
     if (WHITE_ROUTE_LIST.includes(req.baseUrl)) {
       next()
