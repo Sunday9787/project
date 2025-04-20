@@ -1,3 +1,69 @@
-dist
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
 node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Config files
+cz-config.cjs
+commitlint.config.cjs
+commitlint-emoji.cjs
+
 .turbo
+
+# 构建产物
+dist
+build
+out
+
+# 依赖目录
+node_modules
+.pnpm-store
+
+# 缓存目录
+.cache
+.temp
+.tmp
+
+# 测试覆盖率报告
+coverage
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 环境变量文件
+.env
+.env.*
+!.env.example
+
+# 配置文件
+commitlint.config.js
+.commitlintrc.js
+.commitlintrc.cjs
+.commitlintrc.json
+.commitlintrc.yaml
+.commitlintrc.yml
+cz-config.js
+.cz-config.js
+.cz-config.cjs
+.czrc

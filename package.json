@@ -7,7 +7,10 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "lint:fix": "turbo run lint:fix"
+    "lint:fix": "turbo run lint:fix",
+    "lint:style": "turbo run lint:style",
+    "commit": "cz-customizable",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "机车靓仔",
@@ -19,13 +22,18 @@
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
     "@types/node": "^22.13.5",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.1.0",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/language-plugin-pug": "^2.2.8",
+    "commitizen": "^4.3.0",
+    "commitlint": "^19.8.0",
+    "commitlint-config-cz": "^0.13.3",
     "cssnano": "^7.0.6",
+    "cz-customizable": "^7.4.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
@@ -33,6 +41,8 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-vue": "^9.29.0",
     "eslint-plugin-vue-pug": "^0.6.2",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "postcss": "^8.5.3",
     "postcss-html": "^1.8.0",
     "postcss-less": "^6.0.0",
@@ -55,5 +65,10 @@
     "typescript": "^5.1.3",
     "unplugin-auto-import": "^19.1.1",
     "vue-pug-plugin": "^2.0.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-customizable"
+    }
   }
 }

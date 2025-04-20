@@ -15,7 +15,9 @@
   },
   "stylelint.snippet": ["css", "less", "postcss", "scss", "stylus"],
   "stylelint.validate": ["css", "less", "scss", "stylus", "vue"],
-  "eslint.validate": ["vue","tsx", "ts"],
+  "eslint.validate": ["vue", "tsx", "ts"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
   "[less]": {
     "editor.defaultFormatter": "stylelint.vscode-stylelint"
   },
@@ -25,10 +27,21 @@
   "[stylus]": {
     "editor.defaultFormatter": "stylelint.vscode-stylelint"
   },
-  "cSpell.words": [
-    "onbinary",
-    "qiyue",
-    "websockets"
-  ],
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "[json]": {
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace",
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "prettier.enableDebugLogs": true,
+  "cSpell.words": ["onbinary", "qiyue", "websockets"],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
