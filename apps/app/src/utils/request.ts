@@ -15,7 +15,7 @@ enum QyHttpStatus {
 }
 
 export function baseURL(url: string = '') {
-  return 'http://192.168.31.168:3000' + url
+  return import.meta.env.VITE_APP_BASE_API + url
 }
 
 const AxiosInstance = axios.create({
@@ -61,7 +61,7 @@ AxiosInstance.interceptors.request.use(function (config) {
 
   if (userModule.access_token) {
     config.headers.setAuthorization(`Bearer ${userModule.access_token}`)
-    config.headers.set('Tenant_Id', userModule.tenant_id)
+    config.headers.set('Tenant-Id', userModule.tenant_id)
   }
 
   return config

@@ -6,10 +6,10 @@
   "extends": "@vue/tsconfig/tsconfig.json",
   "compilerOptions": {
     "target": "ESNext",
-    "module": "NodeNext",
+    "module": "ESNext",
     "strict": true,
     "jsx": "preserve",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node",
     "moduleDetection": "auto",
     "verbatimModuleSyntax": false,
     "experimentalDecorators": true,
@@ -21,25 +21,12 @@
     "useDefineForClassFields": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
-    "types": [
-      "@dcloudio/types",
-      "wot-design-uni/global",
-      "miniprogram-api-typings"
-    ],
+    "types": ["@dcloudio/types", "wot-design-uni/global", "miniprogram-api-typings"]
   },
   "include": ["./src"],
-  "exclude": [
-    "node_modules",
-    "unpackage",
-    "src/**/*.nvue"
-  ]
+  "exclude": ["node_modules", "unpackage", "src/**/*.nvue"]
 }
