@@ -1,23 +1,58 @@
 import { Inject, Injectable } from '@nestjs/common'
+import { ClientProxy } from '@nestjs/microservices'
 import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
+import { firstValueFrom, timeout } from 'rxjs'
 import { BaseDTO } from 'src/common/base.dto'
 import { QyHttpException, QyHttpStatus } from 'src/common/exception/http.exception'
 import { QiyueQuery } from 'src/common/query'
-import { DocService } from 'src/doc/doc.service'
+import { RedisService } from 'src/redis/redis.service'
 import { UserEntity } from 'src/user/user.entity'
 import { UserService } from 'src/user/user.service'
 import { Between, Like, Repository } from 'typeorm'
 
-import { ProjectBaseDTO, ProjectQueryDTO, ResponseProjectDTO } from './project.dto'
+import { ProjectBaseDTO, ProjectQueryDTO, RenderProjectDocDTO, ResponseProjectDTO } from './project.dto'
 import { ProjectEntity } from './project.entity'
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectRepository(ProjectEntity) private readonly repository: Repository<ProjectEntity>,
-    @Inject(UserService) private readonly userService: UserService
+    @Inject(UserService) private readonly userService: UserService,
+    @Inject(RedisService) private readonly redisService: RedisService,
+    @Inject('MQ_SERVICE') private readonly mq: ClientProxy
   ) {}
+
+  async generateProjectCode() {
+    const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '') // 20250420
+
+    // 使用 Redis 全局自增计数器
+    const serial = await this.redisService.redis.incr('project:serial')
+
+    const padded = serial.toString().padStart(4, '0')
+    return `PRJ-${dateStr}-${padded}`
+  }
+
+  async exportDoc(id: number, tenant_id: string): Promise<[string, Buffer]> {
+    const entity = await this.repository.findOne({
+      where: { id, tenant_id },
+      relations: { members: true, surveys: { item: true }, owner: true },
+      order: {
+        create_at: 'ASC',
+        surveys: { item: { create_at: 'ASC' } }
+      }
+    })
+
+    if (!entity) {
+      throw new QyHttpException('项目不存在', QyHttpStatus.BAD_REQUEST)
+    }
+
+    const data = plainToInstance(RenderProjectDocDTO, entity)
+    const result$ = this.mq.send<ReturnType<Buffer['toJSON']>>('export', data).pipe(timeout(20000))
+    const result = await firstValueFrom(result$)
+
+    return [data.name, Buffer.from(result.data)]
+  }
 
   async detail(id: number, tenant_id: string) {
     const data = await this.repository.findOne({
@@ -36,15 +71,21 @@ export class ProjectService {
 
   async save(data: ProjectBaseDTO, members: BaseDTO[], tenant_id: string, payload: JwtPayload) {
     const entity = this.repository.create(data)
-    const user = await this.userService.findById(payload.id)
+    const user = await this.userService.findById(payload.id, tenant_id)
     if (!user) {
       throw new QyHttpException('创建失败:创建人不存在', QyHttpStatus.BAD_REQUEST)
     }
 
-    const result = await Promise.all(members.map(item => this.userService.findById(item.id)))
+    const result = await Promise.all(members.map(item => this.userService.findById(item.id, tenant_id)))
 
     if (result.some(item => !item)) {
       throw new QyHttpException('创建失败:成员不存在', QyHttpStatus.BAD_REQUEST)
+    }
+
+    const temp = await this.repository.findOneByOrFail({ id: entity.id, tenant_id })
+
+    if (!temp) {
+      entity.code = await this.generateProjectCode()
     }
 
     entity.owner = user

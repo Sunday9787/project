@@ -1,11 +1,20 @@
 import { Transform, Type } from 'class-transformer'
 import { IsDate, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator'
+import dayjs from 'dayjs'
 import { BaseDTO, QueryBaseOrderDTO, QueryOrderByType, ResponseBaseDTO } from 'src/common/base.dto'
 import { ListQueryDTO } from 'src/common/query'
 import { IsChineseIDCard } from 'src/common/validate/id.card'
 
+import { DocSurveyItemDTO } from './item/item.dto'
 import { SurveyEntity } from './survey.entity'
-import { SurveyStatus, SurveyStructure } from './survey.enum'
+import {
+  SurveyPurposeHouse,
+  surveyPurposeHouseMap,
+  SurveyStatus,
+  surveyStatusMap,
+  SurveyStructure,
+  surveyStructureMap
+} from './survey.enum'
 
 export class ResponseSurveyDTO extends ResponseBaseDTO {
   owner: string
@@ -24,15 +33,62 @@ export class ResponseSurveyDTO extends ResponseBaseDTO {
 
   building_area: number
 
-  @Transform(val => new Date(val.value).getTime())
-  building_construction_date: Date
+  @Transform(val => (val.value ? new Date(val.value).getTime() : val.value))
+  building_construction_date: Date | null
 
-  @Transform(val => new Date(val.value).getTime())
-  preservation_date: Date
+  @Transform(val => (val.value ? new Date(val.value).getTime() : val.value))
+  preservation_date: Date | null
 
   building_img: string
 
   owner_signature_img: string
+}
+
+export class DocSurveyDTO {
+  id: number
+
+  owner: string
+
+  id_card: string
+
+  distance: number
+
+  location: string
+
+  number_of_floors: number
+
+  status: SurveyStatus
+  get status_name() {
+    return surveyStatusMap.get(this.status)
+  }
+
+  structure_type: SurveyStructure
+  get structure_type_name() {
+    return surveyStructureMap.get(this.structure_type)
+  }
+
+  purpose_house: SurveyPurposeHouse
+  get purpose_house_name() {
+    return surveyPurposeHouseMap.get(this.purpose_house)
+  }
+
+  building_area: number
+
+  @Transform(val => dayjs(val.value).format('YYYY年MM月DD日'))
+  building_construction_date: Date
+
+  @Transform(val => (val.value ? dayjs(val.value).format('YYYY年MM月DD日') : val.value))
+  preservation_date: Date
+
+  @Transform(val => dayjs(val.value).format('YYYY.MM.DD'))
+  create_at: Date
+
+  building_img: string
+
+  owner_signature_img: string
+
+  @Type(() => DocSurveyItemDTO)
+  item: DocSurveyItemDTO[]
 }
 
 export class SurveyDTO extends BaseDTO {

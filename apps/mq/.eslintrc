@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "@repo/eslint-config"
+  ],
+  "parserOptions": {
+    "tsconfigRootDir": [
+      "./tsconfig.json"
+    ]
+  }
+}

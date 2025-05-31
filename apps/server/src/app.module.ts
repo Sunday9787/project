@@ -10,6 +10,7 @@ import { JwtAuthGuard } from './auth/guard/jwt.guard'
 import { TenantGuard } from './common/guard/tenant'
 import { TenantInterceptor } from './common/interceptor/tenant.context.interceptor'
 import { ProjectModule } from './project/project.module'
+import { RabbitMQModule } from './rabbitmq.module'
 import { RedisModule } from './redis/redis.module'
 import { SurveyModule } from './survey/survey.module'
 import { TenantModule } from './tenant/tenant.module'
@@ -18,6 +19,7 @@ import { UserModule } from './user/user.module'
 
 @Module({
   imports: [
+    RabbitMQModule,
     RedisModule,
     ConfigModule.forRoot({
       envFilePath: ['.env.development.local', '.env.development', '.env.production'],

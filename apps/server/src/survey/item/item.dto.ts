@@ -7,6 +7,14 @@ export class ResponseSurveyItemDTO extends ResponseBaseDTO {
   img: string
 }
 
+export class DocSurveyItemDTO {
+  survey_id: number
+  damaged_part: string
+  desc: string
+  remark: string
+  img: string
+}
+
 export class SurveyItemDTO extends BaseDTO {
   @IsInt()
   survey_id: number

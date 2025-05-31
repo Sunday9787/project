@@ -1,11 +1,23 @@
 import { Transform } from 'class-transformer'
 import { IsIn, IsInt, IsOptional, IsString } from 'class-validator'
+import dayjs from 'dayjs'
 
 export type QueryOrderByType<T> = { [K in keyof T]?: 'asc' | 'desc' }
 
 export class BaseDTO {
   @IsInt()
   id: number
+}
+
+export class ResponseBaseDocDTO {
+  tenant_id: string
+  id: number
+
+  @Transform(val => dayjs(val.value).format('YYYY/MM/DD'))
+  create_at: number
+
+  @Transform(val => dayjs(val.value).format('YYYY/MM/DD'))
+  update_at: number
 }
 
 export class ResponseBaseDTO {

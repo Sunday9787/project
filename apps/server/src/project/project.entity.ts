@@ -11,6 +11,10 @@ export class ProjectEntity extends BaseEntity {
   @Column({ type: 'varchar', comment: '项目名称' })
   name: string
 
+  @Index({ unique: true })
+  @Column({ type: 'varchar', comment: '项目编号' })
+  code: string
+
   @Index()
   @Column({ type: 'varchar', comment: '委托单位' })
   client: string
@@ -32,7 +36,7 @@ export class ProjectEntity extends BaseEntity {
   status: ProjectStatus
 
   @OneToMany(() => SurveyEntity, metadata => metadata.project)
-  survey: SurveyEntity[]
+  surveys: SurveyEntity[]
 
   @ManyToMany(() => UserEntity, metadata => metadata.projects)
   @JoinTable({

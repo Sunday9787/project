@@ -41,8 +41,8 @@ export class UserService {
     })
   }
 
-  findById(id: number) {
-    return this.repository.findOneBy({ id })
+  findById(id: number, tenant_id: string) {
+    return this.repository.findOneBy({ id, tenant_id })
   }
 
   async forget(data: UserForgetDTO, tenant_id: string) {

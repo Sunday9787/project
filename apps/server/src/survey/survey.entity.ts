@@ -32,14 +32,14 @@ export class SurveyEntity extends BaseEntity {
   @Column({ type: 'integer', comment: '房屋用途' })
   purpose_house: SurveyPurposeHouse
 
-  @Column({ type: 'timestamp', comment: '建成年份' })
-  building_construction_date: Date
+  @Column({ type: 'timestamp', nullable: true, comment: '建成年份' })
+  building_construction_date: Date | null
 
   @Column({ type: 'integer', comment: '建筑面积 平方米' })
   building_area: number
 
   @Column({ type: 'timestamp', default: null, comment: '保全日期' })
-  preservation_date: Date
+  preservation_date: Date | null
 
   @Column({ type: 'varchar', comment: '房屋主图' })
   building_img: string
@@ -60,7 +60,7 @@ export class SurveyEntity extends BaseEntity {
   @RelationId((entity: SurveyEntity) => entity.project)
   project_id: number
 
-  @ManyToOne(() => ProjectEntity, metadata => metadata.survey)
+  @ManyToOne(() => ProjectEntity, metadata => metadata.surveys)
   @JoinColumn({ name: 'project_id' })
   project: ProjectEntity
 

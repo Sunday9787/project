@@ -17,6 +17,7 @@ import type { Request, Response } from 'express'
 import type ExpressSession from 'express-session'
 import { AuthToken } from 'src/common/decorator/auth'
 import { Public } from 'src/common/decorator/public'
+import { TenantId } from 'src/common/decorator/tenant'
 import { User } from 'src/common/decorator/user'
 // import { QyHttpException, QyHttpStatus } from 'src/exception/http.exception'
 import { UserEntity } from 'src/user/user.entity'
@@ -77,7 +78,7 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('refresh')
-  refresh(@Query('token') token: string) {
-    return this.authService.refreshToken(token)
+  refresh(@Query('token') token: string, @TenantId() tenant_id: string) {
+    return this.authService.refreshToken(token, tenant_id)
   }
 }

@@ -94,11 +94,11 @@ export class AuthService {
     Logger.warn('token user 异常登出')
   }
 
-  async refreshToken(refreshToken: string) {
+  async refreshToken(refreshToken: string, tenant_id: string) {
     try {
       // 验证 refresh_token
       const decoded: ResponseUserDTO = this.jwtService.verify(refreshToken)
-      const user = await this.userService.findById(decoded.id)
+      const user = await this.userService.findById(decoded.id, tenant_id)
 
       if (!user) {
         throw new QyHttpException('用户不存在', QyHttpStatus.USER_NOT_FOUND)

@@ -10,6 +10,12 @@ export enum SurveyStructure {
   brickConcreteStructure = 2
 }
 
+export const surveyStructureMap = new Map([
+  [SurveyStructure.castInPlaceFrameStructure, '现浇框架结构'],
+  [SurveyStructure.steelConcreteStructure, '钢混结构'],
+  [SurveyStructure.brickConcreteStructure, '砖混结构']
+])
+
 export enum SurveyStatus {
   /** 未保全 */
   start = -1,
@@ -18,6 +24,12 @@ export enum SurveyStatus {
   /** 保全完成 */
   complete = 1
 }
+
+export const surveyStatusMap = new Map([
+  [SurveyStatus.start, '未保全'],
+  [SurveyStatus.pending, '保全中'],
+  [SurveyStatus.complete, '保全完成']
+])
 
 /**
  * 房屋用途
@@ -46,3 +58,17 @@ export enum SurveyPurposeHouse {
   /** 其他 */
   other = 10
 }
+
+export const surveyPurposeHouseMap = new Map([
+  [SurveyPurposeHouse.plant, '仓房'],
+  [SurveyPurposeHouse.warehouse, '仓库'],
+  [SurveyPurposeHouse.business, '商业用房'],
+  [SurveyPurposeHouse.service, '服务业用房'],
+  [SurveyPurposeHouse.office, '办公室'],
+  [SurveyPurposeHouse.residence, '住宅'],
+  [SurveyPurposeHouse.school, '教育用房'],
+  [SurveyPurposeHouse.culture, '文化用房'],
+  [SurveyPurposeHouse.hospital, '医疗用房'],
+  [SurveyPurposeHouse.science, '科学实验研究用房'],
+  [SurveyPurposeHouse.other, '其他']
+])
