@@ -87,7 +87,7 @@ interface Props {
 const props = defineProps<Props>()
 const userModule = useUserModule()
 const cacheModule = useCacheModule()
-const tab = ref<number>(0)
+const tab = ref(0)
 const { project, refresh } = useProject({ type: 'detail', id: props.id })
 
 const surveyUsers = computed(function () {

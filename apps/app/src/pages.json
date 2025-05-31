@@ -9,9 +9,9 @@
   "pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
-      "path": "pages/home/home",
+      "path": "pages/home/index",
       "style": {
-        "navigationBarTitleText": "项目列表"
+        "navigationBarTitleText": "首页"
       }
     },
     {
@@ -21,7 +21,10 @@
       "path": "pages/survey/item"
     },
     {
-      "path": "pages/survey/index"
+      "path": "pages/survey/index",
+      "style": {
+        "navigationBarTitleText": "调查列表"
+      }
     },
     {
       "path": "pages/project/action"
@@ -33,7 +36,7 @@
       }
     },
     {
-      "path": "pages/auth/auth",
+      "path": "pages/auth/index",
       "style": {
         "navigationBarTitleText": "登录"
       }

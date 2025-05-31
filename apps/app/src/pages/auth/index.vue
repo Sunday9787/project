@@ -45,11 +45,13 @@ section.auth-container
 import type { FormInstance } from 'wot-design-uni/components/wd-form/types'
 
 import { AuthEntity } from '@/service/auth.entity'
+import { useCacheModule } from '@/store/cache'
 import { useUserModule } from '@/store/user'
 
 import { useAuthCode } from './hooks'
 
 const userModule = useUserModule()
+const cacheModule = useCacheModule()
 
 const form = reactive(new AuthEntity())
 const { code, resetCode } = useAuthCode()
@@ -65,7 +67,8 @@ async function handleSubmit() {
 
   if (result.valid) {
     await userModule.logIn(form)
-    uni.navigateTo({ url: '/pages/home/home' })
+    await cacheModule.cache()
+    uni.navigateTo({ url: '/pages/home/index' })
   }
 }
 </script>

@@ -153,7 +153,7 @@ export class SurveyEntity extends SurveyItemEntity {
   /**
    * 建成年份
    */
-  @Expose() building_construction_date = Date.now()
+  @Expose() building_construction_date = null
   /**
    * 房屋主图
    */

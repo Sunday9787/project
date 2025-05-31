@@ -90,7 +90,7 @@ AxiosInstance.interceptors.response.use(function (response) {
         duration: 1000,
         success() {
           setTimeout(function () {
-            uni.redirectTo({ url: '/pages/auth/auth' })
+            uni.redirectTo({ url: '/pages/auth/index' })
           }, 1000)
         }
       })
@@ -109,7 +109,7 @@ AxiosInstance.interceptors.response.use(function (response) {
         success() {
           userModule.$reset()
           setTimeout(function () {
-            uni.redirectTo({ url: '/pages/auth/auth' })
+            uni.redirectTo({ url: '/pages/auth/index' })
           }, 1000)
         }
       })
