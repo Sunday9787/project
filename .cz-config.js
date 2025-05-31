@@ -49,7 +49,14 @@ module.exports = {
       name: '👷 ci:       CI相关变更'
     }
   ],
-  scopes: [{ name: 'server' }, { name: 'app' }, { name: 'admin' }, { name: 'common' }, { name: 'docs' }],
+  scopes: [
+    { name: 'server' },
+    { name: 'mq' },
+    { name: 'app' },
+    { name: 'admin' },
+    { name: 'common' },
+    { name: 'docs' }
+  ],
   messages: {
     type: '请选择提交类型(必填)',
     scope: '请输入文件修改范围(可选)',

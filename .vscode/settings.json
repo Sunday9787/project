@@ -43,5 +43,8 @@
   },
   "prettier.enableDebugLogs": true,
   "cSpell.words": ["onbinary", "qiyue", "websockets"],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
+  }
 }
