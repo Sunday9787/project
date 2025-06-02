@@ -1,0 +1,16 @@
+{
+  "name": "@repo/typescript-config",
+  "version": "1.0.0",
+  "description": "全局 typescript 配置",
+  "type": "commonjs",
+  "exports": {
+    "./vue": "./vue/tsconfig.json"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {}
+}

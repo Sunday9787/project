@@ -1,4 +1,10 @@
+const path = require('node:path')
+
 /** @type {import('stylelint').Config} */
 module.exports = {
-  extends: ['@repo/stylelint-config/base', 'stylelint-config-recommended-vue', 'stylelint-config-recommended-scss']
+  extends: [
+    path.resolve(__dirname, '../base.js'),
+    'stylelint-config-recommended-vue',
+    'stylelint-config-recommended-scss'
+  ]
 }

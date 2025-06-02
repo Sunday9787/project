@@ -2,8 +2,8 @@
 module.exports = {
   extends: ['stylelint-config-html/vue', 'stylelint-config-recess-order'],
   plugins: ['stylelint-prettier'],
-  customSyntax: 'postcss-html',
   rules: {
+    'prettier/prettier': true,
     'declaration-property-value-no-unknown': null,
     'unit-no-unknown': [
       true,

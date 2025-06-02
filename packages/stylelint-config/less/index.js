@@ -1,7 +1,8 @@
+const path = require('node:path')
+
 /** @type {import('stylelint').Config} */
 module.exports = {
-  customSyntax: 'postcss-less',
-  extends: ['../base.js', 'stylelint-config-standard-less'],
+  extends: [path.resolve(__dirname, '../base.js'), 'stylelint-config-standard-less'],
   plugins: ['stylelint-less'],
   rules: {
     'selector-class-pattern': null,

@@ -13,6 +13,16 @@
     "source.fixAll.eslint": "explicit",
     "source.fixAll.stylelint": "explicit"
   },
+  // 针对不同语言指定默认格式化工具
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
   "stylelint.snippet": ["css", "less", "postcss", "scss", "stylus"],
   "stylelint.validate": ["css", "less", "scss", "stylus", "vue"],
   "eslint.validate": ["vue", "tsx", "ts"],
@@ -27,22 +37,13 @@
   "[stylus]": {
     "editor.defaultFormatter": "stylelint.vscode-stylelint"
   },
-  "[json]": {
-    "editor.quickSuggestions": {
-      "strings": true
-    },
-    "editor.suggest.insertMode": "replace",
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[jsonc]": {
-    "editor.quickSuggestions": {
-      "strings": true
-    },
-    "editor.suggest.insertMode": "replace",
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
   "prettier.enableDebugLogs": true,
-  "cSpell.words": ["onbinary", "qiyue", "websockets"],
+  "tailwindCSS.includeLanguages": {
+    "vue": "html",
+    "javascript": "javascript",
+    "typescript": "typescript"
+  },
+  "tailwindCSS.experimental.configFile": "apps/admin/tailwind.config.cjs",
   "typescript.tsdk": "node_modules/typescript/lib",
   "[xml]": {
     "editor.defaultFormatter": "redhat.vscode-xml"

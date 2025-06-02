@@ -1,0 +1,14 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "lib": ["ESNext", "DOM", "DOM.Iterable"],
+  "compilerOptions": {
+    "jsx": "preserve",
+    "types": ["node"],
+    "target": "esnext",
+    "baseUrl": ".",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false
+  }
+}
