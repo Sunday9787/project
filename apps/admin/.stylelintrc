@@ -1,0 +1,13 @@
+{
+  "extends": ["@repo/stylelint-config/less"],
+  "overrides": [
+    {
+      "files": ["*.vue"],
+      "customSyntax": "postcss-html"
+    },
+    {
+      "files": ["*.less"],
+      "customSyntax": "postcss-less"
+    }
+  ]
+}

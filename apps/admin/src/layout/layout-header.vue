@@ -1,0 +1,94 @@
+<template lang="pug">
+n-layout-header.layout-header(bordered)
+  a.layout-item(href="javascript:;" @click="systemModule.TOGGLE_SIDEBAR")
+    n-icon(size="24")
+      MenuOpenFilled(v-if="systemModule.sidebar.collapse")
+      MenuFilled(v-else)
+
+  n-breadcrumb
+    n-breadcrumb-item(
+      v-for="item of route.matched"
+      :key="item.name"
+      :href="route.matched.at(-1) === item ? 'javascript:;' : item.path")
+      n-icon(:size="22" v-if="item.meta.icon")
+        component(:is="item.meta.icon")
+      | {{ item.meta.title }}
+
+  .flex-1
+
+  n-space(:wrap="false" :wrap-item="false")
+    nav.flex
+      a.layout-item(href="javascript:;" @click="systemModule.TOGGLE_THEME")
+        n-icon(size="24")
+          NightlightRoundFilled(v-if="systemModule.isLightTheme")
+          LightModeRound(v-else)
+
+      a.layout-item(href="javascript:;" :class="{ active: isFullscreen }" @click="toggle")
+        n-icon(size="24")
+          FullscreenExitRound(v-if="isFullscreen")
+          FullscreenRound(v-else)
+
+      n-dropdown(trigger="click" :options="menuOptions" @select="selectItem")
+        a.layout-item(href="javascript:;")
+          n-avatar(size="medium" round :src="userModule.avatar")
+          | &nbsp;{{ userModule.nickname }}
+</template>
+
+<script lang="ts" setup>
+import {
+  FullscreenExitRound,
+  FullscreenRound,
+  LightModeRound,
+  MenuFilled,
+  MenuOpenFilled,
+  NightlightRoundFilled
+} from '@vicons/material'
+import { useFullscreen } from '@vueuse/core'
+import type { DropdownOption } from 'naive-ui'
+import { useRoute, useRouter } from 'vue-router'
+
+import { useSystemModule } from '@/store/modules/system'
+import { useUserModule } from '@/store/modules/user'
+
+type DropdownMenuKey = 'logout'
+
+defineOptions({ name: 'PageLayoutHeader' })
+
+const router = useRouter()
+const route = useRoute()
+const systemModule = useSystemModule()
+const userModule = useUserModule()
+const { isFullscreen, toggle } = useFullscreen()
+
+const menuOptions: DropdownOption[] = [{ label: '退出系统', key: 'logout' }]
+
+async function selectItem(key: DropdownMenuKey) {
+  switch (key) {
+    case 'logout':
+      await userModule.logOut()
+      router.replace('/login')
+      break
+  }
+}
+</script>
+
+<style lang="less">
+.layout-header {
+  display: flex;
+  align-items: center;
+  height: 60px;
+}
+
+.layout-item {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 1px 10px 0;
+  transition: background 0.2s;
+
+  &.active,
+  &:hover {
+    background-color: var(--layout-item-hover);
+  }
+}
+</style>

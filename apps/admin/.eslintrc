@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "@repo/eslint-config/vue3"
+  ],
+  "parserOptions": {
+    "templateTokenizer": {
+      "pug": "vue-eslint-parser-template-tokenizer-pug"
+    },
+    "tsconfigRootDir": [
+      "./tsconfig.json"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './transition.less';
+@import './theme.less';
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+::selection {
+  color: #fff;
+  background-color: #40327d;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  color: #333;
+}
+
+#app {
+  height: inherit;
+}
+
+.app-form {
+  @apply flex;
+  @apply flex-wrap;
+  @apply gap-y-5;
+}

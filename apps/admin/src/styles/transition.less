@@ -1,0 +1,33 @@
+// global transition css
+
+/* fade */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.28s;
+}
+
+.fade-enter-from,
+.fade-leave-active {
+  opacity: 0;
+}
+
+/* fade-transform */
+.fade-transform-leave-active,
+.fade-transform-enter-active {
+  transition:
+    transform 0.5s,
+    opacity 0.5s;
+}
+
+.fade-transform-enter-from,
+.fade-transform-leave-to {
+  opacity: 0;
+}
+
+.fade-transform-enter-from {
+  transform: translateX(-30px);
+}
+
+.fade-transform-leave-to {
+  transform: translateX(30px);
+}

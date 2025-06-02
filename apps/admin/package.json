@@ -1,0 +1,39 @@
+{
+  "name": "admin",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@sunday9787/log": "^1.0.2",
+    "@vicons/material": "^0.13.0",
+    "@vicons/utils": "^0.1.4",
+    "@vueuse/components": "^13.3.0",
+    "@vueuse/core": "^13.3.0",
+    "axios": "^1.7.7",
+    "mitt": "^3.0.1",
+    "naive-ui": "^2.41.0",
+    "nprogress": "^0.2.0",
+    "pinia": "^3.0.2",
+    "pinia-plugin-persistedstate": "^4.3.0",
+    "vue": "^3.5.16",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:^",
+    "@repo/stylelint-config": "workspace:^",
+    "@repo/typescript-config": "workspace:^",
+    "@types/nprogress": "^0.2.3",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "less": "^4.3.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0",
+    "vite-plugin-html": "^3.2.2",
+    "vite-plugin-svg-icons": "^2.0.1",
+    "vue-tsc": "^2.2.4"
+  }
+}
