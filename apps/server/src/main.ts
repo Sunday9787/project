@@ -1,22 +1,34 @@
-import { Logger, ValidationPipe } from '@nestjs/common'
+import fs from 'node:fs'
+import path from 'node:path'
+
+import { ClassSerializerInterceptor, Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { NestApplication, NestFactory } from '@nestjs/core'
+import { NestApplication, NestFactory, Reflector } from '@nestjs/core'
 import session from 'express-session'
 
 import { AppModule } from './app.module'
-import { QyHttpException, QyHttpStatus } from './common/exception/http.exception'
+import { PrjHttpException, PrjHttpStatus } from './common/exception/http.exception'
 import { HttpExceptionFilter } from './common/filters/http-filter'
 import { NoCacheInterceptor } from './common/interceptor/nocache.interceptor'
 import { TransformInterceptor } from './common/interceptor/transform.interceptor'
 import { getIpAddress } from './tools/network'
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestApplication>(AppModule)
+  const app = await NestFactory.create<NestApplication>(AppModule, {
+    httpsOptions: {
+      key: fs.readFileSync(path.join(process.cwd(), './cert/api.project.test-key.pem')),
+      cert: fs.readFileSync(path.join(process.cwd(), './cert/api.project.test.pem'))
+    }
+  })
   const config: ConfigService<Config> = app.get(ConfigService)
   const origin = config.get('SERVER_CORS') as string
 
   app.useGlobalFilters(new HttpExceptionFilter())
-  app.useGlobalInterceptors(new TransformInterceptor(), new NoCacheInterceptor())
+  app.useGlobalInterceptors(
+    new TransformInterceptor(),
+    new NoCacheInterceptor(),
+    new ClassSerializerInterceptor(app.get(Reflector))
+  )
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -26,9 +38,9 @@ async function bootstrap() {
           errors: Object.values(err.constraints || {})
         }))
 
-        return new QyHttpException(
+        return new PrjHttpException(
           errorMessages.map(item => `${item.field}: ${item.errors.join()}`).join(','),
-          QyHttpStatus.BAD_REQUEST
+          PrjHttpStatus.BAD_REQUEST
         )
       }
     })
@@ -66,11 +78,12 @@ async function bootstrap() {
     })
   )
 
+  const domain = config.get('SERVER_DOMAIN') as string
   const ip = getIpAddress()
 
-  await app.listen(3000, '0.0.0.0')
-  console.log(`🚀 Server running at http://localhost:3000`)
-  console.log(`🚀 Server running at http://${ip.v4}:3000`)
+  await app.listen(3000, domain)
+  console.log('🚀 Server running at https://%s:3000', domain)
+  console.log('🚀 Server running at https://%s:3000', ip.v4)
 }
 
 Logger.verbose(process.env.NODE_ENV, 'NODE_ENV')

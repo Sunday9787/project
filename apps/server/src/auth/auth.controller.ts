@@ -53,13 +53,19 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  login(@Body() body: AuthLocalDTO, @Session() session: ExpressSession.SessionData, @User() user: UserEntity) {
+  login(
+    @Body() body: AuthLocalDTO,
+    @Platform() platform: Platform,
+    @Session() session: ExpressSession.SessionData,
+    @User() user: UserEntity
+  ) {
     Logger.debug(body.code, 'body.code')
     Logger.debug(session.code, 'session.code')
-
-    // if (body.code.toLocaleLowerCase() !== session.code?.toLocaleLowerCase()) {
-    //   throw new QyHttpException('验证码错误', QyHttpStatus.BAD_REQUEST)
-    // }
+    if (platform === 'web' || platform === void 0) {
+      if (body.code.toLocaleLowerCase() !== session.code.toLocaleLowerCase()) {
+        throw new PrjHttpException('验证码错误', PrjHttpStatus.BAD_REQUEST)
+      }
+    }
 
     return this.authService.login(user)
   }

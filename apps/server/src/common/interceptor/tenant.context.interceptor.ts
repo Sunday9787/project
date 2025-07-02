@@ -9,7 +9,7 @@ export class TenantInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const req = context.switchToHttp().getRequest<Request>()
-    const tenantId = req.tenant_id
+    const tenantId = req.headers['tenant-id']!
 
     return new Observable(observer => {
       this.tenantContext.run(tenantId, () => {
