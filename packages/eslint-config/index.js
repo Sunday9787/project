@@ -15,8 +15,8 @@ module.exports = {
     'simple-import-sort/exports': 'error',
     'import/first': 'error',
     'import/newline-after-import': 'error',
-    'import/no-duplicates': 'error',
     '@typescript-eslint/no-unused-vars': 'warn',
-    '@typescript-eslint/no-non-null-assertion': 'off'
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/no-this-alias': ['error', { allowedNames: ['self'] }]
   }
 }

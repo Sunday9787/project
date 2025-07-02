@@ -7,8 +7,9 @@
     "target": "esnext",
     "baseUrl": ".",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "experimentalDecorators": true,
+    "strict": true,
     "strictPropertyInitialization": false
   }
 }

@@ -1,0 +1,19 @@
+{
+  "name": "@repo/service",
+  "version": "1.0.0",
+  "type": "module",
+  "types": "./@types/index.d.ts",
+  "files": [
+    "./src",
+    "./@types"
+  ],
+  "exports": {
+    ".": {
+      "import": "./src/main.ts",
+      "types": "./@types/index.d.ts"
+    },
+    "./common": {
+      "types": "./@types/common.d.ts"
+    }
+  }
+}

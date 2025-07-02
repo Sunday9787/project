@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "target": "ESNext", // 支持较新的 JS 特性
+    "module": "ESNext", // 输出 ES 模块
+    "moduleResolution": "node", // Node 解析模块方式
+    "outDir": "dist", // 编译产物目录
+    "rootDir": "src", // 源码目录
+    "strict": true, // 严格类型检查
+    "esModuleInterop": true, // 兼容 CommonJS 模块
+    "skipLibCheck": true, // 跳过库文件检查，提升编译速度
+    "experimentalDecorators": true, // 开启装饰器语法支持
+    "emitDecoratorMetadata": true, // 生成装饰器元数据
+    "sourceMap": true, // 生成源码映射
+    "declaration": true, // 生成 .d.ts 声明文件
+    "declarationMap": true, // 生成声明文件的映射
+    "strictPropertyInitialization": false, // 关闭属性初始化检查（根据需要调整）
+    "noImplicitAny": false // 允许隐式 any（根据需要调整）
+  },
+  "include": ["src/", "@types", "./vue.d.ts"],
+  "exclude": ["node_modules"]
+}
