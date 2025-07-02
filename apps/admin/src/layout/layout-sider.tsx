@@ -1,6 +1,5 @@
 import { type MenuOption, NIcon, NLayoutSider, NMenu } from 'naive-ui'
-import { h } from 'vue'
-import { type RouteRecordRaw, RouterLink, useRoute, useRouter } from 'vue-router'
+import { type RouteRecordRaw, RouterLink } from 'vue-router'
 
 import { useSystemModule } from '@/store/modules/system'
 

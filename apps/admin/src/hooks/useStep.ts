@@ -13,7 +13,7 @@ export function useStep<C extends string, T = StepComponent<C>>(
 ) {
   const step = ref(1)
   const nextStepLoading = ref(false)
-  const stepInst = ref<StepInst>()
+  const stepInst = shallowRef<StepInst>()
   const router = useRouter()
 
   const current = computed<T>({

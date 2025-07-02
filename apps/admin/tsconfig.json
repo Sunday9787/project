@@ -5,6 +5,7 @@
   },
   "compilerOptions": {
     "baseUrl": ".",
+    "types": ["@repo/service", "@repo/service/common"],
     "paths": {
       "@/*": ["src/*"]
     }

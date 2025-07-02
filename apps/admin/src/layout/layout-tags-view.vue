@@ -1,7 +1,7 @@
 <template lang="pug">
 .layout-tags-view
-  n-scrollbar.flex-1(ref="scrollbarRef" x-scrollable)
-    .tags-view(ref="tagsViewRef")
+  n-scrollbar.flex-1(x-scrollable)
+    .tags-view
       n-tag(
         v-for="tag of tagViews"
         :type="currentTag === tag ? 'primary' : 'default'"
@@ -26,15 +26,10 @@
 </template>
 
 <script setup lang="ts">
-import type { ScrollbarInst } from 'naive-ui'
-import { useRoute } from 'vue-router'
-
 import { TagView, useTagView } from './hooks/useTagViews'
 
 defineOptions({ name: 'LayoutTagsView' })
 
-const scrollbarRef = ref<ScrollbarInst>()
-const tagsViewRef = ref<HTMLDivElement>()
 const route = useRoute()
 const {
   tagViews,

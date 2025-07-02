@@ -1,15 +1,11 @@
 import { plainToInstance } from 'class-transformer'
 import type { DropdownOption } from 'naive-ui'
 import type { Component, DefineComponent } from 'vue'
-import { useRoute } from 'vue-router'
 
-import { type EntityJSON } from '@/class/abstract.entity'
 import router from '@/router'
 
-export type TagViewJSON = EntityJSON<TagView>
-
 export class TagView {
-  public static create<T extends TagViewJSON>(data: T) {
+  public static create<T extends TagView>(data: T) {
     return plainToInstance(TagView, data)
   }
 

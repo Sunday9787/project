@@ -7,6 +7,7 @@ declare global {
     readonly VITE_APP_BASE_API: string
     readonly VITE_APP_RESOURCE_DOMAIN: string
     readonly VITE_APP_ENV: 'development' | 'production'
+    readonly VITE_APP_DOMAIN: string
   }
 
   interface ImportMeta {

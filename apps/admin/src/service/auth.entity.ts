@@ -1,34 +1,31 @@
 import { Expose } from 'class-transformer'
 
-import { AbstractEntity, type EntityJSON } from '@/class/abstract.entity.ts'
+import { BaseEntity } from '@/class/base.entity.ts'
 
 import { AuthService } from './auth.service.ts'
 
-export type AuthLoginEntityJSON = EntityJSON<AuthEntity>
-
-export class AuthLoginEntityResult {
-  @Expose() id: number
-  @Expose() phone: string
-  @Expose() access_token: string
-  @Expose() refresh_token: string
-  @Expose() nickname: string
-  @Expose() avatar: string
-  @Expose() createAt: string
-  @Expose() updateAt: string
-}
-
-export class AuthEntity extends AbstractEntity {
+export class AuthEntity implements Service.AuthLocalDTO {
   private static service = new AuthService()
-
-  public static logIn(data: AuthLoginEntityJSON) {
+  public static logIn(data: AuthEntity) {
     return AuthEntity.service.logIn(data)
   }
-
   public static logOut() {
     return AuthEntity.service.logOut()
   }
 
-  @Expose() phone: string
-  @Expose() password: string
-  @Expose() code: string
+  @Expose()
+  code: string
+  @Expose()
+  phone: string
+  @Expose()
+  password: string
+}
+
+export class LoginEntityResultEntity extends BaseEntity implements Service.ResponseUserLoginDTO {
+  nickname: string
+  phone: string
+  access_token: string
+  refresh_token: string
+  avatar: string | null
+  role: Service.UserRole
 }

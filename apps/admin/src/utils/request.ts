@@ -1,18 +1,9 @@
+import { PrjHttpStatus } from '@repo/service'
 import axios, { type AxiosRequestConfig } from 'axios'
 
 import router from '@/router'
 import store from '@/store'
 import { useUserModule } from '@/store/modules/user'
-
-enum QyHttpStatus {
-  USER_NOT_FOUND = 1000,
-  USER_PASSWORD_WRONG = 1001,
-  USER_TOKEN_INVALID = 1002,
-  USER_REFRESH_TOKEN_INVALID = 1003,
-  USER_EXISTED = 1004,
-  BAD_REQUEST = 0,
-  OK_REQUEST = 200
-}
 
 const refreshURL = new URL(baseURL('/auth/refresh'))
 
@@ -43,7 +34,8 @@ AxiosInstance.interceptors.request.use(
     const userModule = useUserModule(store)
 
     if (userModule.access_token) {
-      config.headers.Authorization = `Bearer ${userModule.access_token}`
+      config.headers.setAuthorization(`Bearer ${userModule.access_token}`)
+      config.headers.set('Tenant-Id', userModule.tenant_id)
       return config
     }
 
@@ -57,51 +49,49 @@ AxiosInstance.interceptors.request.use(
 
 AxiosInstance.interceptors.response.use(
   async function (response) {
-    {
-      const req: XMLHttpRequest = response.request
-      const userModule = useUserModule(store)
+    const req: XMLHttpRequest = response.request
+    const userModule = useUserModule(store)
 
-      /**
-       * blob 文件处理
-       */
-      if (response.data instanceof Blob) {
-        const filename = req.getResponseHeader('content-disposition')!.replace('attachment; filename=', '')
-        response.data = { data: { blob: response.data, filename } }
-        return response
-      }
+    /**
+     * blob 文件处理
+     */
+    if (response.data instanceof Blob) {
+      const filename = req.getResponseHeader('content-disposition')!.replace('attachment; filename=', '')
+      response.data = { data: { blob: response.data, filename } }
+      return response
+    }
 
-      if (response.data.code !== QyHttpStatus.OK_REQUEST) {
-        console.error(response.data)
+    if (response.data.code !== PrjHttpStatus.OK_REQUEST) {
+      console.error(response.data)
 
-        // ! REFRESH__TOKEN 失效退出登录
-        if (
-          response.data.code === QyHttpStatus.USER_REFRESH_TOKEN_INVALID &&
-          new URL(baseURL(response.config.url)).pathname === refreshURL.pathname
-        ) {
-          window.$message.error('token失效 请重新登录')
-          console.error('token失效 请重新登录')
-          userModule.$reset()
-          window.setTimeout(function () {
-            router.replace({ path: '/login', query: { redirect: router.currentRoute.value.fullPath } })
-          }, 0)
-          return Promise.reject(response)
-        }
-
-        // ! ACCESS_TOKEN 失效重试
-        if (response.data.code === QyHttpStatus.USER_TOKEN_INVALID) {
-          const { data } = await refreshToken(userModule.refresh_token)
-          userModule.access_token = data.access_token
-          window.$message.info('请重试')
-          return Promise.reject(response)
-        }
-
-        window.$message.error(response.data.message)
-
+      // ! REFRESH__TOKEN 失效退出登录
+      if (
+        response.data.code === PrjHttpStatus.USER_REFRESH_TOKEN_INVALID &&
+        new URL(baseURL(response.config.url)).pathname === refreshURL.pathname
+      ) {
+        window.$message.error('token失效 请重新登录')
+        console.error('token失效 请重新登录')
+        userModule.$reset()
+        window.setTimeout(function () {
+          router.replace({ path: '/login', query: { redirect: router.currentRoute.value.fullPath } })
+        }, 0)
         return Promise.reject(response)
       }
 
-      return response
+      // ! ACCESS_TOKEN 失效重试
+      if (response.data.code === PrjHttpStatus.USER_TOKEN_INVALID) {
+        const { data } = await refreshToken(userModule.refresh_token)
+        userModule.access_token = data.access_token
+        window.$message.info('请重试')
+        return Promise.reject(response)
+      }
+
+      window.$message.error(response.data.message)
+
+      return Promise.reject(response)
     }
+
+    return response
   },
   function (error) {
     console.error(error)

@@ -16,7 +16,7 @@ interface Props {
 
 const props = defineProps<Props>()
 const logo = computed(function () {
-  return props.theme === 'light' ? 'http://dummyimage.com/240x60' : 'http://dummyimage.com/240x60'
+  return props.theme === 'light' ? '//dummyimage.com/240x60' : '//dummyimage.com/240x60'
 })
 </script>
 

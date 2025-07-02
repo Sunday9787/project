@@ -32,9 +32,8 @@
 
 <script lang="ts" setup>
 import { type FormInst, type FormItemProps, useMessage } from 'naive-ui'
-import { useRouter } from 'vue-router'
 
-import { AuthEntity, type AuthLoginEntityJSON } from '@/service/auth.entity'
+import { AuthEntity } from '@/service/auth.entity'
 import { useUserModule } from '@/store/modules/user'
 
 import { useAuthCode } from './hooks/useAuthCode'
@@ -53,7 +52,7 @@ const userModule = useUserModule()
 const formRef = shallowRef<FormInst>()
 const form = shallowReactive(new AuthEntity())
 
-const formRule: FormRule<AuthLoginEntityJSON> = {
+const formRule: FormRule<Service.AuthLocalDTO> = {
   phone: { required: true, message: '请输入邮箱' },
   code: { required: true, message: '请输入验证码' },
   password: { required: true, message: '请输入密码' }
