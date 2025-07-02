@@ -1,8 +1,13 @@
 import type { ResponseUserDTO } from 'src/user/user.dto'
 
+declare global {
+  type Platform = 'wechat' | 'android' | 'ios' | 'web' | void
+}
+
 declare module 'http' {
   interface IncomingHttpHeaders {
     'tenant-id'?: string
+    'x-platform'?: string
   }
 }
 
@@ -14,10 +19,6 @@ declare global {
   }
 
   declare namespace Express {
-    interface Request {
-      tenant_id: string
-    }
-
     interface User extends ResponseUserDTO {
       iat: number
       exp: number

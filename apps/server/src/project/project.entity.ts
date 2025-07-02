@@ -35,9 +35,11 @@ export class ProjectEntity extends BaseEntity {
   @Column({ type: 'integer', default: ProjectStatus.start, comment: '进度状态' })
   status: ProjectStatus
 
+  /** 调查详情 */
   @OneToMany(() => SurveyEntity, metadata => metadata.project)
   surveys: SurveyEntity[]
 
+  /** 项目调查成员 */
   @ManyToMany(() => UserEntity, metadata => metadata.projects)
   @JoinTable({
     joinColumn: { name: 'project_id', referencedColumnName: 'id' },

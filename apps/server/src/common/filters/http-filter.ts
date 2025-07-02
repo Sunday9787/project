@@ -8,19 +8,19 @@ import {
 } from '@nestjs/common'
 import type { Request, Response } from 'express'
 
-import { QyHttpException, QyHttpStatus } from '../exception/http.exception'
+import { PrjHttpException, PrjHttpStatus } from '../exception/http.exception'
 
 interface ResponseError {
   data: null
   timeStamp: string
   message: string
-  code: QyHttpStatus
+  code: PrjHttpStatus
   url: string
 }
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: QyHttpException | UnauthorizedException | NotFoundException, host: ArgumentsHost) {
+  catch(exception: PrjHttpException | UnauthorizedException | NotFoundException, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<Response>()
     const request = ctx.getRequest<Request>()
@@ -32,7 +32,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     Logger.error(exception.stack, 'Exception')
 
     const result: ResponseError = (function () {
-      if (exception instanceof QyHttpException) {
+      if (exception instanceof PrjHttpException) {
         return {
           data: null,
           timeStamp: new Date().toISOString(),
@@ -47,7 +47,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
           data: null,
           timeStamp: new Date().toISOString(),
           message: 'url 不存在',
-          code: QyHttpStatus.SOURCE_NOT_FOUND,
+          code: PrjHttpStatus.SOURCE_NOT_FOUND,
           url: request.originalUrl
         }
       }
@@ -57,7 +57,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
           data: null,
           timeStamp: new Date().toISOString(),
           message: 'token 失效',
-          code: QyHttpStatus.USER_TOKEN_INVALID,
+          code: PrjHttpStatus.USER_TOKEN_INVALID,
           url: request.originalUrl
         }
       }
@@ -66,7 +66,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         data: null,
         timeStamp: new Date().toISOString(),
         message: '服务器内部错误',
-        code: QyHttpStatus.INTERNAL_SERVER_ERROR,
+        code: PrjHttpStatus.INTERNAL_SERVER_ERROR,
         url: request.originalUrl
       }
     })()

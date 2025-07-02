@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import type { Request } from 'express'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-import { QyHttpException, QyHttpStatus } from 'src/common/exception/http.exception'
+import { PrjHttpException, PrjHttpStatus } from 'src/common/exception/http.exception'
 
 import { AuthService } from '../auth.service'
 
@@ -28,7 +28,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const hasToken = await this.auth.hasToken(token)
 
     if (!hasToken) {
-      throw new QyHttpException('token 失效', QyHttpStatus.USER_TOKEN_INVALID)
+      throw new PrjHttpException('token 失效', PrjHttpStatus.USER_TOKEN_INVALID)
     }
 
     return hasToken && payload

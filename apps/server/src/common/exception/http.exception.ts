@@ -1,4 +1,4 @@
-export enum QyHttpStatus {
+export enum PrjHttpStatus {
   /** 用户不存在 */
   USER_NOT_FOUND = 1000,
   /** 用户密码错误 */
@@ -19,10 +19,10 @@ export enum QyHttpStatus {
   INTERNAL_SERVER_ERROR = 500
 }
 
-export class QyHttpException extends Error {
+export class PrjHttpException extends Error {
   constructor(
     public message: string,
-    public code: QyHttpStatus
+    public code: PrjHttpStatus
   ) {
     super(message)
   }

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
-import { QyHttpException, QyHttpStatus } from 'src/common/exception/http.exception'
-import { QiyueQuery } from 'src/common/query'
+import { PrjHttpException, PrjHttpStatus } from 'src/common/exception/http.exception'
+import { PrjQuery } from 'src/common/query'
 import { md5 } from 'src/tools'
 import { Between, Like, Repository } from 'typeorm'
 
@@ -22,7 +22,7 @@ export class UserService {
       const user = await this.repository.findOne({ where: { phone: entity.phone } })
 
       if (user) {
-        throw new QyHttpException('手机号已注册', QyHttpStatus.USER_EXISTED)
+        throw new PrjHttpException('手机号已注册', PrjHttpStatus.USER_EXISTED)
       }
     }
 
@@ -50,7 +50,7 @@ export class UserService {
   }
 
   all(query: UserQueryDTO, tenant_id: string) {
-    const qianliQuery = new QiyueQuery(query, function (entity: UserEntity) {
+    const prjQuery = new PrjQuery(query, function (entity: UserEntity) {
       return plainToInstance(ResponseUserDTO, entity, { excludeExtraneousValues: true })
     })
 
@@ -67,10 +67,10 @@ export class UserService {
               : void 0
         },
         order: query.order_by,
-        ...qianliQuery.option
+        ...prjQuery.option
       })
       .then(function (result) {
-        return qianliQuery.data(result)
+        return prjQuery.data(result)
       })
   }
 

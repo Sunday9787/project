@@ -16,10 +16,11 @@ import {
 import type { Request, Response } from 'express'
 import type ExpressSession from 'express-session'
 import { AuthToken } from 'src/common/decorator/auth'
+import { Platform } from 'src/common/decorator/platform'
 import { Public } from 'src/common/decorator/public'
 import { TenantId } from 'src/common/decorator/tenant'
 import { User } from 'src/common/decorator/user'
-// import { QyHttpException, QyHttpStatus } from 'src/exception/http.exception'
+import { PrjHttpException, PrjHttpStatus } from 'src/common/exception/http.exception'
 import { UserEntity } from 'src/user/user.entity'
 import svgCaptcha from 'svg-captcha'
 

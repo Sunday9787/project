@@ -26,7 +26,7 @@ export class ListQueryDTO extends QueryBaseDTO {
   }
 }
 
-export class QiyueQuery<T, D, Q extends ListQueryDTO> {
+export class PrjQuery<T, D, Q extends ListQueryDTO> {
   private readonly result: ListDTO<D>
   public readonly option: Pick<FindManyOptions<T>, 'skip' | 'take'>
 

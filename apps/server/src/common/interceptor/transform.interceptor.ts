@@ -2,18 +2,18 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nes
 import type { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
-import { QyHttpStatus } from '../exception/http.exception'
+import { PrjHttpStatus } from '../exception/http.exception'
 
-type Response<T> = { data: T | null; code: QyHttpStatus; message: string }
+type AppResponse<T> = { data: T | null; code: PrjHttpStatus; message: string }
 
 @Injectable()
-export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> {
-  intercept(context: ExecutionContext, next: CallHandler<T>): Observable<Response<T>> {
+export class TransformInterceptor<T> implements NestInterceptor<T, AppResponse<T>> {
+  intercept(context: ExecutionContext, next: CallHandler<T>): Observable<AppResponse<T>> {
     return next.handle().pipe(
       map(data => {
         return {
           data: data || null,
-          code: QyHttpStatus.OK_REQUEST,
+          code: PrjHttpStatus.OK_REQUEST,
           message: 'success'
         }
       })

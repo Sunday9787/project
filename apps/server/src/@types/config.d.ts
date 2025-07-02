@@ -30,6 +30,7 @@ declare global {
     OSS_DIR: string
 
     SERVER_CORS: string
+    SERVER_DOMAIN: string
   }
 
   interface JwtPayload extends ResponseUserDTO {

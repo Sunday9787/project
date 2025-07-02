@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { instanceToPlain, plainToInstance } from 'class-transformer'
 import dayjs from 'dayjs'
-import { QyHttpException, QyHttpStatus } from 'src/common/exception/http.exception'
+import { PrjHttpException, PrjHttpStatus } from 'src/common/exception/http.exception'
 import { RedisService } from 'src/redis/redis.service'
 import { ResponseUserDTO, ResponseUserLoginDTO } from 'src/user/user.dto'
 import type { UserEntity } from 'src/user/user.entity'
@@ -66,14 +66,14 @@ export class AuthService {
   }
 
   async login(user: UserEntity) {
-    const dto = ResponseUserLoginDTO.fromPlain(user)
+    const dto = plainToInstance(ResponseUserLoginDTO, user)
 
     dto.access_token = this.signToken(user)
     dto.refresh_token = this.signToken(user, true)
 
     await this.setToken(dto)
 
-    return instanceToPlain(dto)
+    return dto
   }
 
   validateUser(body: AuthLocalDTO) {
@@ -101,7 +101,7 @@ export class AuthService {
       const user = await this.userService.findById(decoded.id, tenant_id)
 
       if (!user) {
-        throw new QyHttpException('用户不存在', QyHttpStatus.USER_NOT_FOUND)
+        throw new PrjHttpException('用户不存在', PrjHttpStatus.USER_NOT_FOUND)
       }
 
       const response: Pick<ResponseUserLoginDTO, 'access_token'> = {
@@ -116,7 +116,7 @@ export class AuthService {
 
       return response
     } catch (error) {
-      throw new QyHttpException('refresh_token 已过期', QyHttpStatus.USER_REFRESH_TOKEN_INVALID)
+      throw new PrjHttpException('refresh_token 已过期', PrjHttpStatus.USER_REFRESH_TOKEN_INVALID)
     }
   }
 }

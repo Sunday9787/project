@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
-import { QyHttpException, QyHttpStatus } from 'src/common/exception/http.exception'
+import { PrjHttpException, PrjHttpStatus } from 'src/common/exception/http.exception'
 import { SurveyEntity } from 'src/survey/survey.entity'
 import { TenantService } from 'src/tenant/tenant.service'
 import { EntityManager, Repository } from 'typeorm'
@@ -21,7 +21,7 @@ export class SurveyItemService {
   async save(data: SurveyItemDTO, tenant_id: string) {
     const survey = await this.surveyRepository.findOneBy({ id: data.survey_id, tenant_id })
     if (!survey) {
-      throw new QyHttpException('未找到该调查信息', QyHttpStatus.BAD_REQUEST)
+      throw new PrjHttpException('未找到该调查信息', PrjHttpStatus.BAD_REQUEST)
     }
 
     await this.entityManager.transaction(async manager => {

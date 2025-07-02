@@ -1,4 +1,4 @@
-import { Transform } from 'class-transformer'
+import { Expose, Transform } from 'class-transformer'
 import { IsIn, IsInt, IsOptional, IsString } from 'class-validator'
 import dayjs from 'dayjs'
 
@@ -10,23 +10,33 @@ export class BaseDTO {
 }
 
 export class ResponseBaseDocDTO {
+  @Expose()
   tenant_id: string
+
+  @Expose()
   id: number
 
+  @Expose()
   @Transform(val => dayjs(val.value).format('YYYY/MM/DD'))
   create_at: number
 
+  @Expose()
   @Transform(val => dayjs(val.value).format('YYYY/MM/DD'))
   update_at: number
 }
 
 export class ResponseBaseDTO {
+  @Expose()
   tenant_id: string
+
+  @Expose()
   id: number
 
+  @Expose()
   @Transform(val => new Date(val.value).getTime())
   create_at: number
 
+  @Expose()
   @Transform(val => new Date(val.value).getTime())
   update_at: number
 }

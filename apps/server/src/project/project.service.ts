@@ -4,8 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
 import { firstValueFrom, timeout } from 'rxjs'
 import { BaseDTO } from 'src/common/base.dto'
-import { QyHttpException, QyHttpStatus } from 'src/common/exception/http.exception'
-import { QiyueQuery } from 'src/common/query'
+import { PrjHttpException, PrjHttpStatus } from 'src/common/exception/http.exception'
+import { PrjQuery } from 'src/common/query'
 import { RedisService } from 'src/redis/redis.service'
 import { UserEntity } from 'src/user/user.entity'
 import { UserService } from 'src/user/user.service'
@@ -44,7 +44,7 @@ export class ProjectService {
     })
 
     if (!entity) {
-      throw new QyHttpException('项目不存在', QyHttpStatus.BAD_REQUEST)
+      throw new PrjHttpException('项目不存在', PrjHttpStatus.BAD_REQUEST)
     }
 
     const data = plainToInstance(RenderProjectDocDTO, entity)
@@ -60,31 +60,31 @@ export class ProjectService {
         id,
         tenant_id
       },
-      select: {
-        members: { id: true }
-      },
-      relations: { members: true }
+      relations: { members: true, owner: true }
     })
 
-    return plainToInstance(ResponseProjectDTO, data)
+    if (!data) {
+      throw new PrjHttpException('项目不存在', PrjHttpStatus.BAD_REQUEST)
+    }
+
+    return plainToInstance(ResponseProjectDTO, data, { strategy: 'excludeAll' })
   }
 
   async save(data: ProjectBaseDTO, members: BaseDTO[], tenant_id: string, payload: JwtPayload) {
     const entity = this.repository.create(data)
     const user = await this.userService.findById(payload.id, tenant_id)
     if (!user) {
-      throw new QyHttpException('创建失败:创建人不存在', QyHttpStatus.BAD_REQUEST)
+      throw new PrjHttpException('保存失败:创建人不存在', PrjHttpStatus.BAD_REQUEST)
     }
 
     const result = await Promise.all(members.map(item => this.userService.findById(item.id, tenant_id)))
 
     if (result.some(item => !item)) {
-      throw new QyHttpException('创建失败:成员不存在', QyHttpStatus.BAD_REQUEST)
+      throw new PrjHttpException('保存失败:成员不存在', PrjHttpStatus.BAD_REQUEST)
     }
 
-    const temp = await this.repository.findOneByOrFail({ id: entity.id, tenant_id })
-
-    if (!temp) {
+    // 如果id > 0 则是更新 否则 生成 项目编号
+    if (!entity.id) {
       entity.code = await this.generateProjectCode()
     }
 
@@ -99,8 +99,8 @@ export class ProjectService {
   }
 
   all(query: ProjectQueryDTO, tenant_id: string) {
-    const qianliQuery = new QiyueQuery(query, function (entity: ProjectEntity) {
-      return plainToInstance(ResponseProjectDTO, entity)
+    const prjQuery = new PrjQuery(query, function (entity: ProjectEntity) {
+      return plainToInstance(ResponseProjectDTO, entity, { strategy: 'excludeAll' })
     })
 
     return this.repository
@@ -119,11 +119,15 @@ export class ProjectService {
                   ? Between(new Date(query.create_at_start), new Date(query.create_at_end))
                   : void 0
             },
+        relations: {
+          owner: true,
+          members: true
+        },
         order: query.order_by,
-        ...qianliQuery.option
+        ...prjQuery.option
       })
       .then(function (result) {
-        return qianliQuery.data(result)
+        return prjQuery.data(result)
       })
   }
 }

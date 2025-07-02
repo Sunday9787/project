@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
-import { QyHttpException, QyHttpStatus } from 'src/common/exception/http.exception'
-import { QiyueQuery } from 'src/common/query'
+import { PrjHttpException, PrjHttpStatus } from 'src/common/exception/http.exception'
+import { PrjQuery } from 'src/common/query'
 import { ProjectEntity } from 'src/project/project.entity'
 import { Between, Like, Repository } from 'typeorm'
 
@@ -30,7 +30,7 @@ export class SurveyService {
     const project = await this.projectRepository.findOneBy({ id: data.project_id, tenant_id })
 
     if (!project) {
-      throw new QyHttpException('该租户下项目未找到', QyHttpStatus.BAD_REQUEST)
+      throw new PrjHttpException('该租户下项目未找到', PrjHttpStatus.BAD_REQUEST)
     }
 
     const entity = this.surveyRepository.create(data)
@@ -43,7 +43,7 @@ export class SurveyService {
   }
 
   all(query: SurveyQueryDTO, tenant_id: string) {
-    const qianliQuery = new QiyueQuery(query, function (entity: SurveyEntity) {
+    const prjQuery = new PrjQuery(query, function (entity: SurveyEntity) {
       return plainToInstance(ResponseSurveyDTO, entity)
     })
 
@@ -64,10 +64,10 @@ export class SurveyService {
                   : void 0
             },
         order: query.order_by,
-        ...qianliQuery.option
+        ...prjQuery.option
       })
       .then(function (result) {
-        return qianliQuery.data(result)
+        return prjQuery.data(result)
       })
   }
 }

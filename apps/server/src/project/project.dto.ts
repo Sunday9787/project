@@ -1,4 +1,4 @@
-import { Transform, Type } from 'class-transformer'
+import { Expose, Transform, Type } from 'class-transformer'
 import { IsArray, IsInt, IsOptional, IsString, ValidateNested } from 'class-validator'
 import dayjs from 'dayjs'
 import { BaseDTO, QueryBaseOrderDTO, QueryOrderByType, ResponseBaseDTO } from 'src/common/base.dto'
@@ -56,13 +56,41 @@ export class ProjectQueryDTO extends ListQueryDTO {
   order_by?: ProjectOrderBy
 }
 
+class ResponseProjectUserDTO implements Pick<ResponseUserDTO, 'id' | 'avatar' | 'nickname'> {
+  @Expose()
+  id: number
+  @Expose()
+  avatar: string | null
+  @Expose()
+  nickname: string
+}
+
 export class ResponseProjectDTO extends ResponseBaseDTO {
+  static statusMap = new Map<ProjectStatus, string>([
+    [ProjectStatus.complete, '保全完成'],
+    [ProjectStatus.pending, '保全中'],
+    [ProjectStatus.start, '未保全']
+  ])
+  @Expose()
   name: string
+  @Expose()
   client: string
-  owner_id: number
+  @Expose()
   location: string
+  @Expose()
   status: ProjectStatus
-  members: BaseDTO[]
+  @Expose()
+  get status_name() {
+    return ResponseProjectDTO.statusMap.get(this.status)!
+  }
+  @Expose()
+  owner_id: number
+  @Expose()
+  @Type(() => ResponseProjectUserDTO)
+  owner: ResponseProjectUserDTO
+  @Expose()
+  @Type(() => ResponseProjectUserDTO)
+  members: ResponseProjectUserDTO[]
 }
 
 export class RenderProjectDocDTO {

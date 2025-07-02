@@ -6,7 +6,7 @@ import { createTenantKey } from 'src/tools'
 import * as uuid from 'uuid'
 
 import { IS_PUBLIC_KEY } from '../decorator/public'
-import { QyHttpException, QyHttpStatus } from '../exception/http.exception'
+import { PrjHttpException, PrjHttpStatus } from '../exception/http.exception'
 
 @Injectable()
 export class TenantGuard implements CanActivate {
@@ -29,16 +29,14 @@ export class TenantGuard implements CanActivate {
     }
 
     if (!tenant_id) {
-      throw new QyHttpException('租户不存在', QyHttpStatus.TENANT_ID_NOT_FOUND)
+      throw new PrjHttpException('租户不存在', PrjHttpStatus.TENANT_ID_NOT_FOUND)
     }
 
     if (!uuid.validate(tenant_id) || uuid.version(tenant_id) !== 4) {
-      throw new QyHttpException('租户ID不合法', QyHttpStatus.BAD_REQUEST)
+      throw new PrjHttpException('租户ID不合法', PrjHttpStatus.BAD_REQUEST)
     }
 
-    req.tenant_id = tenant_id
-
-    const key = createTenantKey(req.tenant_id)
+    const key = createTenantKey(tenant_id)
     const tenant = await this.redisService.cacheManager.get<string>(key)
 
     if (!tenant) {

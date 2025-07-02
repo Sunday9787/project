@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import type { Request } from 'express'
 import { Strategy } from 'passport-local'
-import { QyHttpException, QyHttpStatus } from 'src/common/exception/http.exception'
+import { PrjHttpException, PrjHttpStatus } from 'src/common/exception/http.exception'
 import { md5 } from 'src/tools'
 
 import { AuthLocalDTO } from '../auth.dto'
@@ -28,11 +28,11 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     const user = await this.authService.validateUser(dto)
 
     if (!user) {
-      throw new QyHttpException('用户不存在', QyHttpStatus.USER_NOT_FOUND)
+      throw new PrjHttpException('用户不存在', PrjHttpStatus.USER_NOT_FOUND)
     }
 
     if (md5(password) !== user.password) {
-      throw new QyHttpException('用户密码错误', QyHttpStatus.USER_PASSWORD_WRONG)
+      throw new PrjHttpException('用户密码错误', PrjHttpStatus.USER_PASSWORD_WRONG)
     }
 
     Logger.verbose('用户信息校验通过')
