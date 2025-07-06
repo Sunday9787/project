@@ -19,6 +19,6 @@
     "strictPropertyInitialization": false, // 关闭属性初始化检查（根据需要调整）
     "noImplicitAny": false // 允许隐式 any（根据需要调整）
   },
-  "include": ["src/", "@types", "./vue.d.ts"],
+  "include": ["src/", "@types"],
   "exclude": ["node_modules"]
 }

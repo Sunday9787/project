@@ -1,4 +1,5 @@
 import { type ClassConstructor, instanceToPlain, plainToInstance } from 'class-transformer'
+import { toRaw } from 'vue'
 
 const valueWeakMap = new WeakMap<AbstractEntity, AbstractEntity>()
 
@@ -18,7 +19,7 @@ export abstract class AbstractEntity {
   }
 
   public static toJSON<T extends object>(context: T) {
-    return instanceToPlain(context) as T
+    return instanceToPlain(context, { strategy: 'excludeAll' }) as T
   }
 
   constructor() {

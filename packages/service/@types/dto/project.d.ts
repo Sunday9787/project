@@ -16,8 +16,6 @@ declare namespace Service {
     keyword?: string
   }
 
-  type ProjectUserDTO = Pick<Service.UserDTO, 'nickname' | 'id' | 'avatar'>
-
   interface ProjectDTO extends ResponseBaseDTO {
     /** 项目名 */
     name: string
@@ -27,11 +25,11 @@ declare namespace Service {
     owner_id: number
     /** 项目位置 */
     location: string
-    owner?: ProjectUserDTO
+    owner: ResponseUserPlainDTO
     /** 项目状态 */
     status: ProjectStatus
     status_name: string
     /** 项目调查成员 */
-    members: ProjectUserDTO[]
+    members: ResponseUserPlainDTO[]
   }
 }
