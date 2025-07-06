@@ -32,7 +32,7 @@ export class SurveyItemService {
 
   async detail(id: number, tenant_id: string) {
     const response = await this.repository.findOneBy({ id, tenant_id })
-    return plainToInstance(ResponseSurveyItemDTO, response)
+    return plainToInstance(ResponseSurveyItemDTO, response, { strategy: 'excludeAll' })
   }
 
   async del(id: number, tenant_id: string) {
@@ -48,6 +48,6 @@ export class SurveyItemService {
       }
     })
 
-    return plainToInstance(ResponseSurveyItemDTO, response)
+    return plainToInstance(ResponseSurveyItemDTO, response, { strategy: 'excludeAll' })
   }
 }

@@ -1,10 +1,15 @@
+import { Expose } from 'class-transformer'
 import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 import { BaseDTO, ResponseBaseDTO } from 'src/common/base.dto'
 
 export class ResponseSurveyItemDTO extends ResponseBaseDTO {
-  damaged_part: string
-  desc: string
-  img: string
+  @Expose() damaged_part: string
+
+  @Expose() desc: string
+
+  @Expose() img: string
+
+  @Expose() remark: string
 }
 
 export class DocSurveyItemDTO {

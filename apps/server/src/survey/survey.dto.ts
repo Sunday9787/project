@@ -1,4 +1,4 @@
-import { Transform, Type } from 'class-transformer'
+import { Expose, Transform, Type } from 'class-transformer'
 import { IsDate, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator'
 import dayjs from 'dayjs'
 import { BaseDTO, QueryBaseOrderDTO, QueryOrderByType, ResponseBaseDTO } from 'src/common/base.dto'
@@ -17,31 +17,41 @@ import {
 } from './survey.enum'
 
 export class ResponseSurveyDTO extends ResponseBaseDTO {
-  owner: string
+  @Expose() owner: string
 
-  id_card: string
+  @Expose() id_card: string
 
-  distance: number
+  @Expose() distance: number
 
-  location: string
+  @Expose() location: string
 
-  number_of_floors: number
+  @Expose() structure_type: SurveyStructure
 
-  status: SurveyStatus
+  @Expose() number_of_floors: number
 
-  structure_type: SurveyStructure
+  @Expose() purpose_house: SurveyPurposeHouse
 
-  building_area: number
-
+  @Expose()
   @Transform(val => (val.value ? new Date(val.value).getTime() : val.value))
-  building_construction_date: Date | null
+  building_construction_date: number | null
 
+  @Expose() building_area: number
+
+  @Expose()
   @Transform(val => (val.value ? new Date(val.value).getTime() : val.value))
-  preservation_date: Date | null
+  preservation_date: number | null
 
-  building_img: string
+  @Expose() building_img: string
 
-  owner_signature_img: string
+  @Expose() property_certificate_img: string | null
+
+  @Expose() property_plan_img: string | null
+
+  @Expose() owner_signature_img: string
+
+  @Expose() status: SurveyStatus
+
+  @Expose() project_id: number
 }
 
 export class DocSurveyDTO {

@@ -21,10 +21,7 @@ export class UserDTO extends BaseDTO {
   avatar: string | null
 }
 
-export class ResponseUserDTO extends ResponseBaseDTO {
-  @Expose()
-  phone: string
-
+export class ResponsePlainUserDTO extends ResponseBaseDTO {
   @Expose()
   nickname: string
 
@@ -35,6 +32,11 @@ export class ResponseUserDTO extends ResponseBaseDTO {
   avatar: string | null
 }
 
+export class ResponseUserDTO extends ResponsePlainUserDTO {
+  @Expose()
+  phone: string
+}
+
 export class ResponseUserLoginDTO extends ResponseBaseDTO {
   @Expose() nickname: string
   @Expose() phone: string
@@ -42,6 +44,7 @@ export class ResponseUserLoginDTO extends ResponseBaseDTO {
   @Expose() refresh_token: string
   @Expose() avatar: string | null
   @Expose() role: UserRole
+  @Expose() expires_in: number
 
   static fromPlain(data: UserEntity) {
     const instance = new ResponseUserLoginDTO()

@@ -1,4 +1,5 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common'
+import { instanceToPlain } from 'class-transformer'
 import type { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
@@ -12,7 +13,7 @@ export class TransformInterceptor<T> implements NestInterceptor<T, AppResponse<T
     return next.handle().pipe(
       map(data => {
         return {
-          data: data || null,
+          data: (instanceToPlain(data) as T) || null,
           code: PrjHttpStatus.OK_REQUEST,
           message: 'success'
         }

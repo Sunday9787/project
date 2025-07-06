@@ -6,7 +6,7 @@ import { PrjQuery } from 'src/common/query'
 import { md5 } from 'src/tools'
 import { Between, Like, Repository } from 'typeorm'
 
-import { ResponseUserDTO, UserDTO, UserForgetDTO, UserQueryDTO } from './user.dto'
+import { ResponsePlainUserDTO, ResponseUserDTO, UserDTO, UserForgetDTO, UserQueryDTO } from './user.dto'
 import { UserEntity } from './user.entity'
 
 @Injectable()
@@ -51,7 +51,7 @@ export class UserService {
 
   all(query: UserQueryDTO, tenant_id: string) {
     const prjQuery = new PrjQuery(query, function (entity: UserEntity) {
-      return plainToInstance(ResponseUserDTO, entity, { excludeExtraneousValues: true })
+      return plainToInstance(ResponseUserDTO, entity, { strategy: 'excludeAll' })
     })
 
     return this.repository
@@ -76,7 +76,7 @@ export class UserService {
 
   cache() {
     return this.repository.find().then(function (entity) {
-      return plainToInstance(ResponseUserDTO, entity)
+      return plainToInstance(ResponsePlainUserDTO, entity, { strategy: 'excludeAll' })
     })
   }
 }

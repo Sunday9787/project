@@ -1,9 +1,9 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { ClassSerializerInterceptor, Logger, ValidationPipe } from '@nestjs/common'
+import { Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { NestApplication, NestFactory, Reflector } from '@nestjs/core'
+import { NestApplication, NestFactory } from '@nestjs/core'
 import session from 'express-session'
 
 import { AppModule } from './app.module'
@@ -24,11 +24,7 @@ async function bootstrap() {
   const origin = config.get('SERVER_CORS') as string
 
   app.useGlobalFilters(new HttpExceptionFilter())
-  app.useGlobalInterceptors(
-    new TransformInterceptor(),
-    new NoCacheInterceptor(),
-    new ClassSerializerInterceptor(app.get(Reflector))
-  )
+  app.useGlobalInterceptors(new TransformInterceptor(), new NoCacheInterceptor())
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

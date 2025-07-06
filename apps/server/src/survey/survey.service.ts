@@ -23,7 +23,7 @@ export class SurveyService {
       where: { id, tenant_id }
     })
 
-    return plainToInstance(ResponseSurveyDTO, data)
+    return plainToInstance(ResponseSurveyDTO, data, { strategy: 'excludeAll' })
   }
 
   async save(data: SurveyDTO, tenant_id: string) {
@@ -44,7 +44,7 @@ export class SurveyService {
 
   all(query: SurveyQueryDTO, tenant_id: string) {
     const prjQuery = new PrjQuery(query, function (entity: SurveyEntity) {
-      return plainToInstance(ResponseSurveyDTO, entity)
+      return plainToInstance(ResponseSurveyDTO, entity, { strategy: 'excludeAll' })
     })
 
     return this.surveyRepository

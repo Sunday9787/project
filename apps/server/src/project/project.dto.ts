@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { BaseDTO, QueryBaseOrderDTO, QueryOrderByType, ResponseBaseDTO } from 'src/common/base.dto'
 import { ListQueryDTO } from 'src/common/query'
 import { DocSurveyDTO } from 'src/survey/survey.dto'
-import { ResponseUserDTO } from 'src/user/user.dto'
+import { ResponsePlainUserDTO, ResponseUserDTO } from 'src/user/user.dto'
 
 import { ProjectEntity } from './project.entity'
 import { ProjectStatus } from './project.enum'
@@ -56,15 +56,6 @@ export class ProjectQueryDTO extends ListQueryDTO {
   order_by?: ProjectOrderBy
 }
 
-class ResponseProjectUserDTO implements Pick<ResponseUserDTO, 'id' | 'avatar' | 'nickname'> {
-  @Expose()
-  id: number
-  @Expose()
-  avatar: string | null
-  @Expose()
-  nickname: string
-}
-
 export class ResponseProjectDTO extends ResponseBaseDTO {
   static statusMap = new Map<ProjectStatus, string>([
     [ProjectStatus.complete, '保全完成'],
@@ -86,11 +77,11 @@ export class ResponseProjectDTO extends ResponseBaseDTO {
   @Expose()
   owner_id: number
   @Expose()
-  @Type(() => ResponseProjectUserDTO)
-  owner: ResponseProjectUserDTO
+  @Type(() => ResponsePlainUserDTO)
+  owner: ResponsePlainUserDTO
   @Expose()
-  @Type(() => ResponseProjectUserDTO)
-  members: ResponseProjectUserDTO[]
+  @Type(() => ResponsePlainUserDTO)
+  members: ResponsePlainUserDTO[]
 }
 
 export class RenderProjectDocDTO {

@@ -11,6 +11,29 @@ import { UserService } from 'src/user/user.service'
 
 import type { AuthLocalDTO } from './auth.dto'
 
+function jwtExpires(durationStr: string) {
+  const match = durationStr.match(/^(?<value>\d+(?:\.\d+)?)(?<unit>[a-zA-Z]+)$/)
+  if (!match || !match.groups) return null
+
+  const { value, unit } = match.groups
+
+  // 映射单位为 dayjs 支持的格式（标准化）
+  const unitMap = {
+    d: 'day',
+    h: 'hour',
+    m: 'minute',
+    s: 'second',
+    ms: 'millisecond',
+    w: 'week',
+    M: 'month',
+    y: 'year'
+  }
+
+  const normalizedUnit = unitMap[unit] || unit // fallback to original if full name already
+
+  return dayjs().add(parseFloat(value), normalizedUnit)
+}
+
 @Injectable()
 export class AuthService {
   static generateTokenKey(value: string) {
@@ -25,7 +48,7 @@ export class AuthService {
   ) {}
 
   signToken(user: UserEntity, refresh?: boolean) {
-    const dto = plainToInstance(ResponseUserDTO, user, { excludeExtraneousValues: true })
+    const dto = plainToInstance(ResponseUserDTO, user, { strategy: 'excludeAll' })
     const data = instanceToPlain(dto)
 
     // refresh-token 设置更长的过期时间
@@ -66,10 +89,12 @@ export class AuthService {
   }
 
   async login(user: UserEntity) {
-    const dto = plainToInstance(ResponseUserLoginDTO, user)
+    const dto = plainToInstance(ResponseUserLoginDTO, user, { strategy: 'excludeAll' })
+    const expires = jwtExpires(this.configService.get('JWT_EXPIRES_IN')!)!
 
     dto.access_token = this.signToken(user)
     dto.refresh_token = this.signToken(user, true)
+    dto.expires_in = expires.valueOf()
 
     await this.setToken(dto)
 
@@ -108,7 +133,7 @@ export class AuthService {
         access_token: this.signToken(user)
       }
 
-      const dto = plainToInstance(ResponseUserLoginDTO, user, { excludeExtraneousValues: true })
+      const dto = plainToInstance(ResponseUserLoginDTO, user, { strategy: 'excludeAll' })
       dto.refresh_token = refreshToken
       dto.access_token = response.access_token
 
