@@ -1,15 +1,19 @@
+import { UserRole } from '@repo/service'
+import { instanceToPlain } from 'class-transformer'
 import { defineStore } from 'pinia'
 
-import { AuthEntity } from '@/service/auth.entity'
-import { AuthLoginEntityResult } from '@/service/user.entity'
+import { AuthLocalEntity, LoginResultEntity } from '@/service/auth.entity'
 
 export const useUserModule = defineStore('userModule', {
   state() {
-    return AuthEntity.toJSON(new AuthLoginEntityResult())
+    return instanceToPlain(new LoginResultEntity(), { strategy: 'exposeAll' }) as LoginResultEntity
+  },
+  getters: {
+    isSurveyor: state => state.role === UserRole.surveyor
   },
   actions: {
-    async logIn(auth: AuthEntity) {
-      const response = await AuthEntity.logIn(auth.toJSON())
+    async logIn(auth: AuthLocalEntity) {
+      const response = await AuthLocalEntity.logIn(LoginResultEntity.toJSON(auth))
 
       this.id = response.id
       this.tenant_id = response.tenant_id
@@ -19,9 +23,10 @@ export const useUserModule = defineStore('userModule', {
       this.nickname = response.nickname
       this.avatar = response.avatar
       this.role = response.role
+      this.expires_in = response.expires_in
     },
     async logOut() {
-      await AuthEntity.logOut()
+      await AuthLocalEntity.logOut()
       this.$reset()
     }
   },

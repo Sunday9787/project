@@ -9,7 +9,7 @@
     "module": "ESNext",
     "strict": true,
     "jsx": "preserve",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "moduleDetection": "auto",
     "verbatimModuleSyntax": false,
     "experimentalDecorators": true,
@@ -25,7 +25,13 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["@dcloudio/types", "wot-design-uni/global", "miniprogram-api-typings"]
+    "types": [
+      "@dcloudio/types",
+      "wot-design-uni/global",
+      "miniprogram-api-typings",
+      "@repo/service",
+      "@repo/service/common"
+    ]
   },
   "include": ["./src"],
   "exclude": ["node_modules", "unpackage", "src/**/*.nvue"]

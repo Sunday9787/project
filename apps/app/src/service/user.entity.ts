@@ -1,45 +1,27 @@
-import { Expose } from 'class-transformer'
+import { AbstractEntity } from '@repo/service'
 
-import { AbstractEntity } from '@/class/abstract.entity'
+import { BaseEntity } from '@/class/base.entity'
+import { useUserModule } from '@/store/user'
 
 import { UserService } from './user.service'
 
-export enum UserRole {
-  /** 组织负责人 */
-  admin = 0,
-  /** 项目负责人 */
-  owner = 1,
-  /** 勘查员 */
-  surveyor = 2
-}
-
-export class UserEntity extends AbstractEntity {
+export class ResponseUserPlainDTO extends BaseEntity implements Service.ResponseUserPlainDTO {
   public static service = new UserService()
 
   public static cache() {
-    return AbstractEntity.wrapper(UserEntity, UserEntity.service.cache())
+    return AbstractEntity.wrapper(ResponseUserPlainDTO, ResponseUserPlainDTO.service.cache())
   }
 
-  @Expose() phone: string
-  @Expose() nickname: string
-  @Expose() avatar: string
-  @Expose() tenant_id: string
-  @Expose() role: UserRole
-
-  get isOwner() {
-    return this.role === UserRole.owner
+  constructor() {
+    const useModule = useUserModule()
+    super(useModule.id)
+    this.tenant_id = useModule.tenant_id
+    this.role = useModule.role
+    this.avatar = useModule.avatar
+    this.nickname = useModule.nickname
   }
 
-  get isAdmin() {
-    return this.role === UserRole.admin
-  }
-
-  get isSurveyor() {
-    return this.role === UserRole.surveyor
-  }
-}
-
-export class AuthLoginEntityResult extends UserEntity {
-  @Expose() access_token: string
-  @Expose() refresh_token: string
+  role: Service.UserRole
+  avatar: string | null
+  nickname: string
 }

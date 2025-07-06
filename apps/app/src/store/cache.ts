@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
 
 import { OssSignature, UploadService } from '@/service/upload.service'
-import { UserEntity } from '@/service/user.entity'
+import { ResponseUserPlainDTO } from '@/service/user.entity'
 
 const uploadService = new UploadService()
 
 interface State {
-  users: UserEntity[]
+  users: ResponseUserPlainDTO[]
   oss: OssSignature | null
 }
 
@@ -18,7 +18,7 @@ export const useCacheModule = defineStore('cache', {
     } as State
   },
   getters: {
-    userMap: state => new Map<number, UserEntity>(state.users.map(item => [item.id, item]))
+    userMap: state => new Map<number, ResponseUserPlainDTO>(state.users.map(item => [item.id, item]))
   },
   actions: {
     async cache() {
@@ -27,7 +27,7 @@ export const useCacheModule = defineStore('cache', {
       console.log('----缓存完毕----')
     },
     async cacheUsers() {
-      const response = await UserEntity.cache()
+      const response = await ResponseUserPlainDTO.cache()
       this.users = response
     },
     async cacheOssSignature() {

@@ -1,6 +1,6 @@
 import path from 'node:path'
 
-import uni from '@dcloudio/vite-plugin-uni'
+import Uni from '@dcloudio/vite-plugin-uni'
 import AutoImport from 'unplugin-auto-import/vite'
 import { defineConfig } from 'vite'
 import vuePugPlugin from 'vue-pug-plugin'
@@ -8,7 +8,7 @@ import vuePugPlugin from 'vue-pug-plugin'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    uni({
+    Uni({
       vueOptions: {
         template: {
           preprocessOptions: {

@@ -2,7 +2,7 @@ import type { ShallowRef } from 'vue'
 import type { UploadInstance } from 'wot-design-uni/components/wd-upload/types'
 
 import { useLoading } from '@/hooks/useLoading'
-import { SurveyDetailItemEntity, SurveyDetailItemListEntity, SurveyEntity } from '@/service/survey.entity'
+import { SurveyEntity, SurveyItemEntity } from '@/service/survey.entity'
 
 export function useSurvey(props: Utils.ActionProps): Ref<SurveyEntity> {
   const form = ref(new SurveyEntity(Number(props.id)))
@@ -24,12 +24,10 @@ export function useSurvey(props: Utils.ActionProps): Ref<SurveyEntity> {
 }
 
 export function useSurveyList(props: Utils.ActionProps) {
-  const data = ref(new SurveyDetailItemListEntity(Number(props.id)))
+  const data = ref<SurveyItemEntity[]>([])
 
-  const { loading, refresh } = useLoading(function () {
-    data.value.data().then(function (response) {
-      data.value.list = response
-    })
+  const { loading, refresh } = useLoading(async function () {
+    data.value = await SurveyItemEntity.list(Number(props.id))
   })
 
   return {
@@ -46,11 +44,11 @@ export interface Props {
   type: Utils.ActionType
 }
 
-export function useSurveyDetailItem(props: Props) {
-  const data = ref(new SurveyDetailItemEntity(Number(props.survey_id)))
+export function useSurveyItem(props: Props) {
+  const data = ref(new SurveyItemEntity(Number(props.survey_id)))
 
   if (props.type !== 'add') {
-    SurveyDetailItemEntity.detail(Number(props.id)).then(function (response) {
+    SurveyItemEntity.detail(Number(props.id)).then(function (response) {
       data.value = response
       data.value.images = [{ uid: Date.now(), url: response.img }]
     })

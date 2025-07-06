@@ -1,7 +1,9 @@
 import { useLoading } from '@/hooks/useLoading'
 import { ProjectEntity } from '@/service/project.entity'
+import { useCacheModule } from '@/store/cache'
 
 export function useProject(props: Utils.ActionProps) {
+  const cacheModule = useCacheModule()
   const project = ref<ProjectEntity>(new ProjectEntity(props.id))
 
   const { loading, refresh } = useLoading(function (request) {
@@ -14,5 +16,18 @@ export function useProject(props: Utils.ActionProps) {
     }
   })
 
-  return { project, loading, refresh }
+  const members = customRef(function (track, trigger) {
+    return {
+      get() {
+        track()
+        return project.value.members.map(item => item.id)
+      },
+      set(value) {
+        project.value.members = value.map(item => cacheModule.userMap.get(item)!)
+        trigger()
+      }
+    }
+  })
+
+  return { project, loading, refresh, members }
 }

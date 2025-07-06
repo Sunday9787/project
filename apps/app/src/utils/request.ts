@@ -1,21 +1,26 @@
+import { needRefreshToken, PrjHttpStatus } from '@repo/service'
 import axios, { type AxiosRequestConfig } from 'axios'
 import qs from 'qs'
 
 import { useUserModule } from '@/store/user'
 
-enum QyHttpStatus {
-  USER_NOT_FOUND = 1000,
-  USER_PASSWORD_WRONG = 1001,
-  USER_TOKEN_INVALID = 1002,
-  USER_REFRESH_TOKEN_INVALID = 1003,
-  USER_EXISTED = 1004,
-  TENANT_ID_NOT_FOUND = 1005,
-  BAD_REQUEST = 0,
-  OK_REQUEST = 200
-}
+import { getGlobalThis } from '.'
+
+const globalThis = getGlobalThis()
 
 export function baseURL(url: string = '') {
   return import.meta.env.VITE_APP_BASE_API + url
+}
+
+const refreshURL = new globalThis.URL(baseURL('/auth/refresh'))
+
+function refreshToken(token: string) {
+  return request<{ access_token: string }>({
+    method: 'post',
+    baseURL: refreshURL.origin,
+    url: refreshURL.pathname,
+    params: { token }
+  })
 }
 
 const AxiosInstance = axios.create({
@@ -59,6 +64,7 @@ const AxiosInstance = axios.create({
 AxiosInstance.interceptors.request.use(function (config) {
   const userModule = useUserModule()
 
+  config.headers.set('X-platform', 'wechat')
   if (userModule.access_token) {
     config.headers.setAuthorization(`Bearer ${userModule.access_token}`)
     config.headers.set('Tenant-Id', userModule.tenant_id)
@@ -67,12 +73,18 @@ AxiosInstance.interceptors.request.use(function (config) {
   return config
 })
 
-AxiosInstance.interceptors.response.use(function (response) {
+AxiosInstance.interceptors.response.use(async function (response) {
   const userModule = useUserModule()
-  if (response.data.code !== QyHttpStatus.OK_REQUEST) {
+
+  if (needRefreshToken(userModule.expires_in)) {
+    const response = await refreshToken(userModule.refresh_token)
+    userModule.access_token = response.data.access_token
+  }
+
+  if (response.data.code !== PrjHttpStatus.OK_REQUEST) {
     console.error(response.data)
 
-    if (response.data.code === QyHttpStatus.USER_NOT_FOUND) {
+    if (response.data.code === PrjHttpStatus.USER_NOT_FOUND) {
       uni.showToast({
         icon: 'error',
         title: '用户不存在',
@@ -83,7 +95,7 @@ AxiosInstance.interceptors.response.use(function (response) {
       return Promise.reject(response)
     }
 
-    if (response.data.code === QyHttpStatus.TENANT_ID_NOT_FOUND) {
+    if (response.data.code === PrjHttpStatus.TENANT_ID_NOT_FOUND) {
       uni.showToast({
         icon: 'error',
         title: '租户不存在',
@@ -100,8 +112,8 @@ AxiosInstance.interceptors.response.use(function (response) {
 
     // ! REFRESH__TOKEN 失效退出登录
     if (
-      response.data.code === QyHttpStatus.USER_REFRESH_TOKEN_INVALID ||
-      response.data.code === QyHttpStatus.USER_TOKEN_INVALID
+      response.data.code === PrjHttpStatus.USER_REFRESH_TOKEN_INVALID ||
+      response.data.code === PrjHttpStatus.USER_TOKEN_INVALID
     ) {
       uni.showToast({
         icon: 'error',

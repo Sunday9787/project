@@ -26,16 +26,6 @@ section.auth-container
           :rules="[{ required: true, message: '请填写密码' }]")
 
       wd-cell-group(custom-class="mt-40")
-        wd-input(
-          v-model="form.code"
-          prop="code"
-          clearable
-          placeholder="请输入验证码"
-          :rules="[{ required: true, message: '请填写验证码' }]")
-          template(#suffix)
-            wd-img(:src="code" width="100" height="34" @click="resetCode()")
-
-      wd-cell-group(custom-class="mt-40")
         wd-button(block size="large" @click="handleSubmit()") 登录
 
   wd-toast
@@ -44,19 +34,16 @@ section.auth-container
 <script setup lang="ts">
 import type { FormInstance } from 'wot-design-uni/components/wd-form/types'
 
-import { AuthEntity } from '@/service/auth.entity'
+import { AuthLocalEntity } from '@/service/auth.entity'
 import { useCacheModule } from '@/store/cache'
 import { useUserModule } from '@/store/user'
-
-import { useAuthCode } from './hooks'
 
 const userModule = useUserModule()
 const cacheModule = useCacheModule()
 
-const form = reactive(new AuthEntity())
-const { code, resetCode } = useAuthCode()
+const form = shallowReactive(new AuthLocalEntity())
 
-const formRef = ref<FormInstance>()
+const formRef = shallowRef<FormInstance>()
 
 async function handleSubmit() {
   if (!formRef.value) {

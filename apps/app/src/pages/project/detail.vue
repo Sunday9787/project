@@ -7,11 +7,11 @@ view.page-view(style="height: 100vh")
           wd-cell(title-width="160rpx" title="项目名称" :value="project.name")
           wd-cell(title-width="160rpx" title="委托单位" :value="project.client")
           wd-cell(title-width="160rpx" title="项目所在地" :value="project.location")
-          wd-cell(title-width="160rpx" title="业务负责人" :value="project.ownerName")
+          wd-cell(title-width="160rpx" title="业务负责人" :value="project.owner.nickname")
           wd-cell(title-width="160rpx" title="进度状态")
             wd-text(size="28rpx" :type="project.statusMap.type" :text="project.statusMap.text")
           wd-select-picker(
-            v-model="project.selectMembers"
+            v-model="members"
             :columns="surveyUsers"
             readonly
             placeholder="暂无调查人员"
@@ -73,7 +73,7 @@ wd-fab(position="right-bottom" direction="top" type="primary")
 
 <script lang="ts" setup>
 import { RequestList, ResponsePage } from '@/class/page'
-import { SurveyItemEntity } from '@/service/survey.entity'
+import { SurveyEntity } from '@/service/survey.entity'
 import { useCacheModule } from '@/store/cache'
 import { useUserModule } from '@/store/user'
 
@@ -88,7 +88,7 @@ const props = defineProps<Props>()
 const userModule = useUserModule()
 const cacheModule = useCacheModule()
 const tab = ref(0)
-const { project, refresh } = useProject({ type: 'detail', id: props.id })
+const { project, refresh, members } = useProject({ type: 'detail', id: props.id })
 
 const surveyUsers = computed(function () {
   return cacheModule.users.filter(item => item.id !== userModule.id)
@@ -99,9 +99,9 @@ const surveyUsers = computed(function () {
  */
 const isTriggered = ref(false)
 const isFinish = ref(false)
-const form = reactive(SurveyItemEntity.form())
+const form = reactive(SurveyEntity.form())
 const page = reactive(new RequestList())
-const data = reactive(new ResponsePage<SurveyItemEntity>())
+const data = reactive(new ResponsePage<SurveyEntity>())
 const instance = getCurrentInstance()!
 const pageViewStyle = reactive({ height: '100%' })
 
@@ -149,7 +149,7 @@ async function search(bottom = false) {
   data.loading = true
 
   try {
-    const response = await SurveyItemEntity.select({ ...page, ...form })
+    const response = await SurveyEntity.select({ ...page, ...form })
     data.list = bottom ? data.list.concat(response.list) : response.list
     data.total = response.total
   } finally {

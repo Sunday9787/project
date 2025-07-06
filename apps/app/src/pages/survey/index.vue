@@ -3,13 +3,13 @@ view.page-view.scroll-y
   a-title(title="勘察")
 
   scroll-view.scroll-view.view-container
-    template(v-for="item of data.list" :key="item.id")
+    template(v-for="item of data" :key="item.id")
       navigator(:url="`/pages/survey/item?id=${item.id}&type=edit&survey_id=${item.survey_id}`")
         wd-cell(title="受损部位" :value="item.damaged_part")
 
     view.loading-text
       text(v-if="loading") 正在加载
-      text(v-if="!loading && !data.list") 没有更多数据了~
+      text(v-if="!loading && !data.length") 没有更多数据了~
 
   view.view-container
     navigator(:url="`/pages/survey/item?survey_id=${id}&type=add`")

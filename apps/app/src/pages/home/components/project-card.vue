@@ -15,7 +15,7 @@ view.project-card(@click="toDetail()")
     text {{ item.location }}
   p.project-card__footer
     text 负责人：
-    wd-tag(type="primary" round) {{ item.ownerName }}
+    wd-tag(type="primary" round) {{ item.owner.nickname }}
 </template>
 
 <script lang="ts" setup>

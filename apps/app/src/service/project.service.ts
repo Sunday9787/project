@@ -1,7 +1,7 @@
 import { AbstractService } from '@/class/abstract.service'
 import { request } from '@/utils/request'
 
-import type { ProjectEntity, ProjectEntityJSON, ProjectItemEntity, ProjectItemQueryEntity } from './project.entity'
+import type { ProjectEntity, ProjectItemEntity, ProjectItemQueryEntity } from './project.entity'
 
 export class ProjectService extends AbstractService {
   baseURL = '/project'
@@ -14,7 +14,7 @@ export class ProjectService extends AbstractService {
     return request.get<ProjectEntity>(this.baseURL + `/detail/${id}`)
   }
 
-  save(data: ProjectEntityJSON) {
+  save(data: ProjectEntity) {
     return request.put(this.baseURL + '/save', data)
   }
 }

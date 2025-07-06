@@ -10,3 +10,8 @@ export function formatDate(date: Date | string | number | null, format = 'YYYY-M
 export async function bootstrapRequest<T>(value: Ref<T>, Result: Promise<T>) {
   value.value = await Result
 }
+
+export function getGlobalThis(): Window & typeof globalThis {
+  // 兜底，使用 Function 构造器执行非严格模式的 this
+  return Function('return this')()
+}

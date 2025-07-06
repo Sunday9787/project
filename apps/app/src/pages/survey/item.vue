@@ -8,7 +8,7 @@ view.page-view
           label-width="250rpx"
           prop="damaged_part"
           v-model="form.damaged_part"
-          :rules="[{required: true, message: '请输入受损部位'}]")
+          :rules="[{ required: true, message: '请输入受损部位' }]")
 
         wd-cell(title-width="250rpx" title="受损部位勘察图" prop="img" :rules="[{ required: true, message: '请上传受损部位勘察图' }]")
           wd-button(size="small" type="info" @click="chooseImage") 选择图片
@@ -27,7 +27,7 @@ view.page-view
           label-width="250rpx"
           prop="desc"
           v-model="form.desc"
-          :rules="[{required: true, message: '请输入完损情况描述'}]")
+          :rules="[{ required: true, message: '请输入完损情况描述' }]")
 
         wd-textarea(
           label="备注"
@@ -47,11 +47,11 @@ import type { FormInstance } from 'wot-design-uni/components/wd-form/types'
 import type { UploadInstance, UploadSuccessEvent } from 'wot-design-uni/components/wd-upload/types'
 
 import { useWatermarkImage } from '@/hooks/useWatermarkImage'
-import type { SurveyDetailItemEntity } from '@/service/survey.entity'
+import type { SurveyItemEntity } from '@/service/survey.entity'
 import type { OSSFormData } from '@/service/upload.service'
 import { useCacheModule } from '@/store/cache'
 
-import { type Props, useSurveyDetailItem } from './hooks'
+import { type Props, useSurveyItem } from './hooks'
 
 const props = defineProps<Props>()
 const cacheModule = useCacheModule()
@@ -63,7 +63,7 @@ const host = computed(function () {
   return 'https:' + cacheModule.oss.host
 })
 
-const form = useSurveyDetailItem(props)
+const form = useSurveyItem(props)
 const formRef = shallowRef<FormInstance>()
 const uploaderRef = shallowRef<UploadInstance>()
 const watermarkImage = useWatermarkImage('canvas')
@@ -135,10 +135,14 @@ function uploadFileSuccess(value: UploadSuccessEvent) {
   form.value.img = ossUrl
 }
 
-function reset(instance: SurveyDetailItemEntity) {
-  instance.reset()
+function reset(instance: SurveyItemEntity) {
   instance.survey_id = Number(props.survey_id)
   instance.images.splice(0)
+  instance.img = ''
+  instance.id = 0
+  instance.remark = ''
+  instance.desc = ''
+  instance.damaged_part = ''
   uni.setNavigationBarTitle({ title: '创建调查项' })
 }
 

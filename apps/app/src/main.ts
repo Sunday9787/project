@@ -1,4 +1,5 @@
 import 'reflect-metadata'
+import 'core-js/web/url'
 
 // #ifdef H5
 import VConsole from 'vconsole'

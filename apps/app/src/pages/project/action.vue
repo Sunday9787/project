@@ -2,13 +2,13 @@
 view.page-view
   wd-form(:model="project" ref="formInst")
     wd-cell-group(border)
-      wd-input(label="项目名称" prop="name" v-model="project.name" :rules="[{required: true, message: '请输入项目名称'}]")
-      wd-input(label="委托单位" prop="client" v-model="project.client" :rules="[{required: true, message: '请输入委托单位'}]")
-      wd-input(label="项目所在地" prop="location" v-model="project.location" :rules="[{required: true, message: '请输入项目所在地'}]")
-      wd-cell(title="业务负责人" :value="userModule.nickname")
+      wd-input(label="项目名称" prop="name" v-model="project.name" :rules="[{ required: true, message: '请输入项目名称' }]")
+      wd-input(label="委托单位" prop="client" v-model="project.client" :rules="[{ required: true, message: '请输入委托单位' }]")
+      wd-input(label="项目所在地" prop="location" v-model="project.location" :rules="[{ required: true, message: '请输入项目所在地' }]")
+      wd-cell(title="业务负责人" :value="project.owner.nickname")
       wd-select-picker(
         :columns="surveyUsers"
-        v-model="project.selectMembers"
+        v-model="members"
         label="调查人员"
         type="checkbox"
         prop="members"
@@ -38,7 +38,7 @@ interface Props {
 const props = defineProps<Props>()
 const userModule = useUserModule()
 const cacheModule = useCacheModule()
-const { project } = useProject(props)
+const { project, members } = useProject(props)
 const formInst = ref<FormInstance>()
 
 const surveyUsers = computed(function () {

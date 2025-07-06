@@ -13,10 +13,10 @@ view.owner-item(@click="toDetail()")
 </template>
 
 <script lang="ts" setup>
-import { SurveyItemEntity } from '@/service/survey.entity'
+import type { SurveyEntity } from '@/service/survey.entity'
 
 interface Props {
-  item: SurveyItemEntity
+  item: SurveyEntity
 }
 
 const { item } = defineProps<Props>()
