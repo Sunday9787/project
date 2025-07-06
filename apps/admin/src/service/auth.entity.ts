@@ -4,13 +4,13 @@ import { BaseEntity } from '@/class/base.entity.ts'
 
 import { AuthService } from './auth.service.ts'
 
-export class AuthEntity implements Service.AuthLocalDTO {
+export class AuthLocalEntity implements Service.AuthLocalDTO {
   private static service = new AuthService()
-  public static logIn(data: AuthEntity) {
-    return AuthEntity.service.logIn(data)
+  public static logIn(data: AuthLocalEntity) {
+    return AuthLocalEntity.service.logIn(data)
   }
   public static logOut() {
-    return AuthEntity.service.logOut()
+    return AuthLocalEntity.service.logOut()
   }
 
   @Expose()
@@ -21,7 +21,7 @@ export class AuthEntity implements Service.AuthLocalDTO {
   password: string
 }
 
-export class LoginEntityResultEntity extends BaseEntity implements Service.ResponseUserLoginDTO {
+export class LoginResultEntity extends BaseEntity implements Service.ResponseUserLoginDTO {
   nickname: string
   phone: string
   access_token: string

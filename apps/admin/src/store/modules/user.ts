@@ -1,14 +1,15 @@
+import { instanceToPlain } from 'class-transformer'
 import { defineStore } from 'pinia'
 
-import { AuthEntity, LoginEntityResultEntity } from '@/service/auth.entity'
+import { AuthLocalEntity, LoginResultEntity } from '@/service/auth.entity'
 
 export const useUserModule = defineStore('userModule', {
   state() {
-    return new LoginEntityResultEntity().toJSON()
+    return instanceToPlain(new LoginResultEntity(), { strategy: 'exposeAll' })
   },
   actions: {
-    async logIn(auth: AuthEntity) {
-      const response = await AuthEntity.logIn(LoginEntityResultEntity.toJSON(auth))
+    async logIn(auth: AuthLocalEntity) {
+      const response = await AuthLocalEntity.logIn(LoginResultEntity.toJSON(auth))
 
       this.id = response.id
       this.access_token = response.access_token
@@ -22,7 +23,7 @@ export const useUserModule = defineStore('userModule', {
       this.update_at = response.update_at
     },
     async logOut() {
-      await AuthEntity.logOut()
+      await AuthLocalEntity.logOut()
       this.$reset()
     }
   },

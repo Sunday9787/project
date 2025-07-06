@@ -1,9 +1,10 @@
 import { AbstractEntity } from '@repo/service'
-import { Transform } from 'class-transformer'
+import { Expose, Transform } from 'class-transformer'
 
 import { formatDate } from '@/utils'
 
 export class BaseEntity extends AbstractEntity implements Service.ResponseBaseDTO {
+  @Expose()
   id: number
   tenant_id: string
   @Transform(val => formatDate(val.value))

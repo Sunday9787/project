@@ -46,9 +46,8 @@ export const useSystemModule = defineStore('systemModule', {
     }
   },
   persist: {
-    pick: ['sidebar', 'theme'],
-    storage: localStorage,
-    afterHydrate() {
+    paths: ['sidebar', 'theme'],
+    afterRestore() {
       requestAnimationFrame(function () {
         emitter.emit(globalChannel.systemThemeChange)
       })

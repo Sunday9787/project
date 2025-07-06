@@ -1,3 +1,4 @@
+import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -15,13 +16,16 @@ import vuePugPlugin from 'vue-pug-plugin'
 
 import pkg from './package.json'
 
-// https://vite.dev/config/
 export default defineConfig(function (env) {
   const data = loadEnv(env.mode, process.cwd())
 
   return {
     server: {
       host: data.VITE_APP_DOMAIN,
+      https: {
+        key: fs.readFileSync(path.join('./cert/admin.project.test-key.pem')),
+        cert: fs.readFileSync(path.join('./cert/admin.project.test.pem'))
+      },
       port: 9787
     },
     define: {
@@ -56,6 +60,7 @@ export default defineConfig(function (env) {
         dts: './src/@types/auto-imports.d.ts',
         imports: [
           'vue',
+          'vue-router',
           {
             'naive-ui': ['useDialog', 'useMessage', 'useNotification', 'useLoadingBar']
           }

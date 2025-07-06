@@ -33,7 +33,7 @@
 <script lang="ts" setup>
 import { type FormInst, type FormItemProps, useMessage } from 'naive-ui'
 
-import { AuthEntity } from '@/service/auth.entity'
+import { AuthLocalEntity } from '@/service/auth.entity'
 import { useUserModule } from '@/store/modules/user'
 
 import { useAuthCode } from './hooks/useAuthCode'
@@ -50,7 +50,7 @@ const { code, resetCode } = useAuthCode()
 const router = useRouter()
 const userModule = useUserModule()
 const formRef = shallowRef<FormInst>()
-const form = shallowReactive(new AuthEntity())
+const form = shallowReactive(new AuthLocalEntity())
 
 const formRule: FormRule<Service.AuthLocalDTO> = {
   phone: { required: true, message: '请输入邮箱' },

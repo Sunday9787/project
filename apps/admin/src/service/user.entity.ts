@@ -1,10 +1,7 @@
-import type { UserRole } from '@repo/service'
-
 import { BaseEntity } from '@/class/base.entity'
 
-export class UserEntity extends BaseEntity implements Service.ResponseUserDTO {
-  phone: string
-  nickname: string
-  role: UserRole
+export class ResponseUserPlainDTO extends BaseEntity implements Service.ResponseUserPlainDTO {
+  role: Service.UserRole
   avatar: string | null
+  nickname: string
 }

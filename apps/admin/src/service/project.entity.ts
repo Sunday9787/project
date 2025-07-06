@@ -4,6 +4,7 @@ import { Type } from 'class-transformer'
 import { BaseEntity } from '@/class/base.entity'
 
 import { ProjectService } from './project.service'
+import { ResponseUserPlainDTO } from './user.entity'
 
 class ProjectItemQueryEntity implements Service.ProjectItemQueryDTO {
   /** 客户名称 */
@@ -11,12 +12,6 @@ class ProjectItemQueryEntity implements Service.ProjectItemQueryDTO {
   /** 项目名称 */
   name?: string
   keyword?: string
-}
-
-class ProjectUserEntity implements Service.ProjectUserDTO {
-  id: number
-  avatar: string | null
-  nickname: string
 }
 
 export class ProjectEntity extends BaseEntity implements Service.ProjectDTO {
@@ -49,8 +44,9 @@ export class ProjectEntity extends BaseEntity implements Service.ProjectDTO {
   get owner_name() {
     return this.owner.nickname
   }
-  @Type(() => ProjectUserEntity)
-  owner: ProjectUserEntity
-  @Type(() => ProjectUserEntity)
-  members: ProjectUserEntity[] = []
+  @Type(() => ResponseUserPlainDTO)
+  owner: ResponseUserPlainDTO = new ResponseUserPlainDTO()
+
+  @Type(() => ResponseUserPlainDTO)
+  members: ResponseUserPlainDTO[] = []
 }
