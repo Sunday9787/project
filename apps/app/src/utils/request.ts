@@ -15,7 +15,7 @@ export function baseURL(url: string = '') {
 const refreshURL = new globalThis.URL(baseURL('/auth/refresh'))
 
 function refreshToken(token: string) {
-  return request<{ access_token: string }>({
+  return request<{ access_token: string; expires_in: number }>({
     method: 'post',
     baseURL: refreshURL.origin,
     url: refreshURL.pathname,
@@ -76,9 +76,15 @@ AxiosInstance.interceptors.request.use(function (config) {
 AxiosInstance.interceptors.response.use(async function (response) {
   const userModule = useUserModule()
 
-  if (needRefreshToken(userModule.expires_in)) {
-    const response = await refreshToken(userModule.refresh_token)
-    userModule.access_token = response.data.access_token
+  /**
+   * 无感刷新 access_token
+   */
+  if (refreshURL.pathname !== response.config.url && userModule.expires_in && needRefreshToken(userModule.expires_in)) {
+    const { data } = await refreshToken(userModule.refresh_token)
+    userModule.access_token = data.access_token
+    userModule.expires_in = data.expires_in
+    // TODO: 重点！必须要重新将请求重新发出
+    return AxiosInstance(response.config)
   }
 
   if (response.data.code !== PrjHttpStatus.OK_REQUEST) {
