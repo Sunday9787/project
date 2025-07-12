@@ -1,10 +1,16 @@
-import { NH2, NSpace, NTable, NTag } from 'naive-ui'
+import { download } from '@repo/service/platform/web'
+import { NButton, NH2, NSpace, NTable, NTag } from 'naive-ui'
 
 import AppCard from '@/components/app-card/index.vue'
 import { ProjectEntity } from '@/service/project.entity'
 
 interface Props {
   project: ProjectEntity
+}
+
+async function doDownload(item: ProjectEntity) {
+  const response = await item.download()
+  download(response.data)
 }
 
 export function ProjectBlock(props: Props) {
@@ -37,6 +43,15 @@ export function ProjectBlock(props: Props) {
             <tr>
               <td>调查人员</td>
               <td>{props.project.members.map(item => item.nickname).join(',')}</td>
+            </tr>
+            <tr>
+              <td colspan={2}>
+                <NSpace justify='center'>
+                  <NButton type='primary' onClick={() => doDownload(props.project)}>
+                    导出项目文档
+                  </NButton>
+                </NSpace>
+              </td>
             </tr>
           </tbody>
         </NTable>

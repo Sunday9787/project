@@ -28,4 +28,5 @@ export class LoginResultEntity extends BaseEntity implements Service.ResponseUse
   refresh_token: string
   avatar: string | null
   role: Service.UserRole
+  expires_in: number
 }

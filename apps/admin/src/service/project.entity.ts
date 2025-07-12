@@ -31,15 +31,19 @@ export class ProjectEntity extends BaseEntity implements Service.ProjectDTO {
     return ProjectEntity.service.del(this.id)
   }
 
-  data() {
+  public data() {
     return BaseEntity.wrapper(ProjectEntity, ProjectEntity.service.detail(this.id))
+  }
+
+  public download() {
+    return ProjectEntity.service.download(this.id)
   }
 
   name: string
   client: string
   owner_id: number
   location: string
-  status: Service.ProjectStatus
+  status: Service.ProjectStatus = ProjectStatus.start
   status_name: string
   get owner_name() {
     return this.owner.nickname

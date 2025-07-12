@@ -1,7 +1,8 @@
 <template lang="pug">
 app-view
-  app-loading(v-if="loading")
-  project-block(:project="entity" v-else)
+  transition(name="fade" mode="out-in")
+    app-skeleton(v-if="loading")
+    project-block(:project="entity" v-else)
 </template>
 
 <script setup lang="ts">

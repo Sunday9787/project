@@ -22,4 +22,12 @@ export class ProjectService extends AbstractService {
   del(id: number) {
     return request.delete(this.baseURL + `/del/${id}`)
   }
+
+  download(id: number) {
+    return request<Blob>({
+      method: 'get',
+      url: this.baseURL + `/export/${id}`,
+      responseType: 'blob'
+    })
+  }
 }

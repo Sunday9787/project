@@ -5,7 +5,7 @@ import { AuthLocalEntity, LoginResultEntity } from '@/service/auth.entity'
 
 export const useUserModule = defineStore('userModule', {
   state() {
-    return instanceToPlain(new LoginResultEntity(), { strategy: 'exposeAll' })
+    return instanceToPlain(new LoginResultEntity(), { strategy: 'exposeAll' }) as LoginResultEntity
   },
   actions: {
     async logIn(auth: AuthLocalEntity) {
@@ -21,6 +21,7 @@ export const useUserModule = defineStore('userModule', {
       this.role = response.role
       this.create_at = response.create_at
       this.update_at = response.update_at
+      this.expires_in = response.expires_in
     },
     async logOut() {
       await AuthLocalEntity.logOut()

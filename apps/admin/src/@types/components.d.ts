@@ -13,6 +13,7 @@ declare module 'vue' {
     AppFormCollapse: typeof import('./../components/app-form-collapse/index.vue')['default']
     AppIcon: typeof import('./../components/app-icon/index.tsx')['default']
     AppLoading: typeof import('./../components/app-loading/index.vue')['default']
+    AppSkeleton: typeof import('./../components/app-skeleton/index.tsx')['default']
     AppTableContainer: typeof import('./../components/app-table-container/index.vue')['default']
     AppTableWidget: typeof import('./../components/app-table-widget/index.vue')['default']
     AppView: typeof import('./../components/app-view/index.vue')['default']

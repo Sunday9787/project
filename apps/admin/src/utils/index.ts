@@ -23,3 +23,12 @@ export function urlResource(url: string) {
 export function isIntegerString(val: string) {
   return /^\d+$/g.test(val)
 }
+
+export function getFileNameFromHeader(contentDisposition: string) {
+  const filenameMatch = contentDisposition.match(/filename\s*=\s*["']?([^;"'\n]+)["']?/i)
+  if (filenameMatch) {
+    return filenameMatch[1]
+  }
+
+  return null
+}

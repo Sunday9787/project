@@ -1,9 +1,11 @@
-import { PrjHttpStatus } from '@repo/service'
+import { needRefreshToken, PrjHttpStatus } from '@repo/service'
 import axios, { type AxiosRequestConfig } from 'axios'
 
 import router from '@/router'
 import store from '@/store'
 import { useUserModule } from '@/store/modules/user'
+
+import { getFileNameFromHeader } from '.'
 
 const refreshURL = new URL(baseURL('/auth/refresh'))
 
@@ -12,7 +14,7 @@ export function baseURL(url: string = '') {
 }
 
 function refreshToken(token: string) {
-  return request<{ access_token: string }>({
+  return request<{ access_token: string; expires_in: number }>({
     method: 'post',
     baseURL: refreshURL.origin,
     url: refreshURL.pathname,
@@ -56,9 +58,25 @@ AxiosInstance.interceptors.response.use(
      * blob 文件处理
      */
     if (response.data instanceof Blob) {
-      const filename = req.getResponseHeader('content-disposition')!.replace('attachment; filename=', '')
-      response.data = { data: { blob: response.data, filename } }
+      const disposition = req.getResponseHeader('Content-Disposition')!
+      const filename = getFileNameFromHeader(disposition)!
+      response.data = { data: { blob: response.data, filename: decodeURIComponent(filename) } }
       return response
+    }
+
+    /**
+     * 无感刷新 access_token
+     */
+    if (
+      refreshURL.pathname !== response.config.url &&
+      userModule.expires_in &&
+      needRefreshToken(userModule.expires_in)
+    ) {
+      const { data } = await refreshToken(userModule.refresh_token)
+      userModule.access_token = data.access_token
+      userModule.expires_in = data.expires_in
+      // TODO: 重点！必须要重新将请求重新发出
+      return AxiosInstance(response.config)
     }
 
     if (response.data.code !== PrjHttpStatus.OK_REQUEST) {
@@ -67,7 +85,7 @@ AxiosInstance.interceptors.response.use(
       // ! REFRESH__TOKEN 失效退出登录
       if (
         response.data.code === PrjHttpStatus.USER_REFRESH_TOKEN_INVALID &&
-        new URL(baseURL(response.config.url)).pathname === refreshURL.pathname
+        response.config.url === refreshURL.pathname
       ) {
         window.$message.error('token失效 请重新登录')
         console.error('token失效 请重新登录')
@@ -75,14 +93,6 @@ AxiosInstance.interceptors.response.use(
         window.setTimeout(function () {
           router.replace({ path: '/login', query: { redirect: router.currentRoute.value.fullPath } })
         }, 0)
-        return Promise.reject(response)
-      }
-
-      // ! ACCESS_TOKEN 失效重试
-      if (response.data.code === PrjHttpStatus.USER_TOKEN_INVALID) {
-        const { data } = await refreshToken(userModule.refresh_token)
-        userModule.access_token = data.access_token
-        window.$message.info('请重试')
         return Promise.reject(response)
       }
 
