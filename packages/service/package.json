@@ -14,6 +14,12 @@
     },
     "./common": {
       "types": "./@types/common.d.ts"
+    },
+    "./platform": {
+      "import": "./src/platform/index.ts"
+    },
+    "./platform/web": {
+      "import": "./src/platform/web/index.ts"
     }
   }
 }

@@ -1,3 +1,5 @@
+import { ref } from 'vue'
+
 type UseActionRequest = () => Promise<void>
 type UseActionHandle = (request: UseActionRequest) => void
 type UseActionCallback = (handle: UseActionHandle) => void
