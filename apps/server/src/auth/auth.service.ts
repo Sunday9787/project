@@ -129,8 +129,10 @@ export class AuthService {
         throw new PrjHttpException('用户不存在', PrjHttpStatus.USER_NOT_FOUND)
       }
 
-      const response: Pick<ResponseUserLoginDTO, 'access_token'> = {
-        access_token: this.signToken(user)
+      const expires = jwtExpires(this.configService.get('JWT_EXPIRES_IN')!)!
+      const response: Pick<ResponseUserLoginDTO, 'access_token' | 'expires_in'> = {
+        access_token: this.signToken(user),
+        expires_in: expires.valueOf()
       }
 
       const dto = plainToInstance(ResponseUserLoginDTO, user, { strategy: 'excludeAll' })

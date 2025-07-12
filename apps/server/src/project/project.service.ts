@@ -47,7 +47,7 @@ export class ProjectService {
       throw new PrjHttpException('项目不存在', PrjHttpStatus.BAD_REQUEST)
     }
 
-    const data = plainToInstance(RenderProjectDocDTO, entity, { strategy: 'excludeAll' })
+    const data = plainToInstance(RenderProjectDocDTO, entity)
     const result$ = this.mq.send<ReturnType<Buffer['toJSON']>>('export', data).pipe(timeout(20000))
     const result = await firstValueFrom(result$)
 

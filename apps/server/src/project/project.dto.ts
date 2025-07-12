@@ -103,8 +103,10 @@ export class RenderProjectDocDTO {
 
   @Type(() => ResponseUserDTO)
   members: ResponseUserDTO[]
+
   @Transform(val => dayjs(val.value).format('YYYY 年 MM 月 DD 日'))
   create_at: string
+
   @Transform(val => dayjs(val.value).format('YYYY 年 MM 月 DD 日'))
   update_at: string
 }

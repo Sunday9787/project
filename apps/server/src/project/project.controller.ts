@@ -15,7 +15,6 @@ import {
 import { Response } from 'express'
 import { TenantId } from 'src/common/decorator/tenant'
 import { User } from 'src/common/decorator/user'
-import { Readable } from 'stream'
 
 import { ProjectDTO, ProjectQueryDTO } from './project.dto'
 import { ProjectService } from './project.service'
@@ -60,7 +59,6 @@ export class ProjectController {
       `attachment; filename="${encodeURIComponent(fileName + '房屋查勘保全报告')}.docx"`
     )
 
-    // **流式传输 buffer**
-    Readable.from(buffer).pipe(res)
+    res.end(buffer)
   }
 }
