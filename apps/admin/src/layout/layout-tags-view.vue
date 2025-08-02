@@ -9,7 +9,7 @@
         size="large"
         style="cursor: pointer;"
         @click="$router.push(tag.path)"
-        @contextmenu.prevent="(e) => tagHandleContextMenu(e, tag)")
+        @contextmenu.prevent="(e: MouseEvent) => tagHandleContextMenu(e, tag)")
         n-icon(:size="16")
           component(:is="tag.icon")
         | {{ tag.title }}

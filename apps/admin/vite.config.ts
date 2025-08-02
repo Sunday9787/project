@@ -28,6 +28,9 @@ export default defineConfig(function (env) {
       },
       port: 9787
     },
+    preview: {
+      port: 9787
+    },
     define: {
       'env.ENV': JSON.stringify(env.mode),
       'env.BUILD': JSON.stringify(dayjs().format('YYYY-M-D HH:mm:ss')),
@@ -79,6 +82,51 @@ export default defineConfig(function (env) {
         // 指定symbolId格式
         symbolId: 'icon-[dir]-[name]'
       })
-    ]
+    ],
+    build: {
+      chunkSizeWarningLimit: 1024,
+      rollupOptions: {
+        output: {
+          // 文件名格式： name.hash8.ext
+          entryFileNames: 'js/app.[hash].js',
+          chunkFileNames: 'js/[name].[hash].js',
+          assetFileNames: assetInfo => {
+            const ext = assetInfo.name?.split('.').pop()
+            if (!ext) return '[name].[hash].[ext]'
+
+            // 输出到不同的文件夹
+            if (/\.(css)$/.test(ext)) return 'css/[name].[hash].[ext]'
+            if (/\.(png|jpe?g|gif|svg|webp)$/.test(ext)) return 'images/[name].[hash].[ext]'
+            if (/\.(woff2?|ttf|eot|otf)$/.test(ext)) return 'fonts/[name].[hash].[ext]'
+            return '[name].[hash].[ext]' // fallback
+          },
+          manualChunks(id) {
+            if (id.includes('node_modules/naive-ui')) {
+              return 'naive-ui'
+            }
+
+            if (id.includes('node_modules')) {
+              return 'vendor'
+            }
+
+            if (id.includes('/src/utils/') || id.includes('/src/class/')) {
+              return 'common'
+            }
+
+            if (id.includes('/src/components/')) {
+              return 'components'
+            }
+
+            if (id.includes('/src/views/')) {
+              const match = id.match(/src\/views\/(.+?)\//)
+              if (match) {
+                return `page-${match[1]}`
+              }
+              return 'page-misc'
+            }
+          }
+        }
+      }
+    }
   }
 })

@@ -30,7 +30,7 @@ n-layout-header.layout-header(bordered)
 
       n-dropdown(trigger="click" :options="menuOptions" @select="selectItem")
         a.layout-item(href="javascript:;")
-          n-avatar(size="medium" round :src="userModule.avatar")
+          n-avatar(size="medium" round :src="userModule.avatar || ''")
           | &nbsp;{{ userModule.nickname }}
 </template>
 

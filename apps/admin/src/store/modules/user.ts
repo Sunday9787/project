@@ -17,7 +17,7 @@ export const useUserModule = defineStore('userModule', {
       this.phone = response.phone
       this.tenant_id = response.tenant_id
       this.nickname = response.nickname
-      this.avatar = response.avatar
+      this.avatar = response.avatar || 'https://avatars.githubusercontent.com/u/20500528?v=4'
       this.role = response.role
       this.create_at = response.create_at
       this.update_at = response.update_at
