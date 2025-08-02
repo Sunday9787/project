@@ -2,7 +2,12 @@ import { useLoading } from '@/hooks/useLoading'
 import { ProjectEntity } from '@/service/project.entity'
 import { useCacheModule } from '@/store/cache'
 
-export function useProject(props: Utils.ActionProps) {
+export interface Props {
+  type?: Utils.ActionType
+  id: string
+}
+
+export function useProject(props: Props) {
   const cacheModule = useCacheModule()
   const project = ref<ProjectEntity>(new ProjectEntity(props.id))
 

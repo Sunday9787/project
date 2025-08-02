@@ -21,7 +21,7 @@ export const useUserModule = defineStore('userModule', {
       this.refresh_token = response.refresh_token
       this.phone = response.phone
       this.nickname = response.nickname
-      this.avatar = response.avatar
+      this.avatar = response.avatar || 'https://avatars.githubusercontent.com/u/20500528?v=4'
       this.role = response.role
       this.expires_in = response.expires_in
     },

@@ -1,5 +1,5 @@
 <template lang="pug">
-view.page-view
+view.page-view.page-view--safe
   wd-form(:model="project" ref="formInst")
     wd-cell-group(border)
       wd-input(label="项目名称" prop="name" v-model="project.name" :rules="[{ required: true, message: '请输入项目名称' }]")

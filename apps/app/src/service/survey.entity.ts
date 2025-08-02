@@ -1,5 +1,6 @@
 import { AbstractEntity, SurveyPurposeHouse, SurveyStatus, SurveyStructure } from '@repo/service'
 import { Expose } from 'class-transformer'
+import type { TextType } from 'wot-design-uni/components/wd-text/types'
 import type { UploadBuildFormDataOption } from 'wot-design-uni/components/wd-upload/types'
 import type { UploadFile } from 'wot-design-uni/components/wd-upload/types'
 
@@ -8,7 +9,7 @@ import { BaseEntity } from '@/class/base.entity'
 import { SurveyItemService, SurveyService } from './survey.service'
 import { UploadService } from './upload.service'
 
-type StatusMap = { text: string; type: Utils.StatusType }
+type StatusMap = { text: string; type: TextType }
 
 export class SurveyItemQueryEntity {
   keyword: string

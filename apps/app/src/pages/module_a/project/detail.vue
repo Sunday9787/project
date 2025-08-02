@@ -1,5 +1,5 @@
 <template lang="pug">
-view.page-view(style="height: 100vh")
+view.page-view.page-view--safe(style="height: 100vh")
   wd-tabs(sticky v-model="tab" auto-line-width swipeable animated id="tabs")
     wd-tab(name="project" title="项目信息")
       wd-cell-group(border)
@@ -31,7 +31,7 @@ view.page-view(style="height: 100vh")
           placeholder-left
           hide-cancel
           :maxlength="10"
-          @search="onRefresh()"
+          @search="search()"
           id="wd-search"
           custom-style="width: 100vw")
 
@@ -40,31 +40,15 @@ view.page-view(style="height: 100vh")
         view.view-container
           text
             | 共&nbsp;
-            wd-text(:text="data.total" type="primary")
+            wd-text(:text="pagination.total" type="primary")
             | &nbsp;条数据
 
         wd-gap
 
-        scroll-view.scroll-view.view-container(
-          scroll-y
-          scroll-anchoring
-          refresher-enabled
-          :refresher-threshold="100"
-          :refresher-triggered="isTriggered"
-          @refresherrefresh="onRefresh"
-          @scrolltolower="onLoadMore")
-          view.scroll-view-loading(v-if="data.loading")
-            wd-loading
-
-          wd-status-tip(image="search" tip="当前搜索无结果" v-else-if="!data.list.length")
-
-          template(v-for="item of data.list" :key="item.id")
-            wd-gap(v-if="data.list.at(0) !== item")
+        a-scroll-view.scroll-view.view-container()
+          template(v-for="item of table.data" :key="item.id")
+            wd-gap(v-if="table.data.at(0) !== item")
             owner-item(:item="item")
-
-          view.loading-text
-            text(v-if="data.loading") 正在加载...
-            text(v-if="isFinish") 没有更多数据了~
 
 wd-fab(position="right-bottom" direction="top" type="primary")
   wd-button(type="primary" round @click="createSurvey()" custom-class="custom-button")
@@ -72,36 +56,30 @@ wd-fab(position="right-bottom" direction="top" type="primary")
 </template>
 
 <script lang="ts" setup>
-import { RequestList, ResponsePage } from '@/class/page'
+import { usePage } from '@/hooks/usePage'
 import { SurveyEntity } from '@/service/survey.entity'
 import { useCacheModule } from '@/store/cache'
 import { useUserModule } from '@/store/user'
 
 import OwnerItem from './components/owner-item.vue'
-import { useProject } from './hooks'
+import { type Props, useProject } from './hooks'
 
-interface Props {
-  id: string
-}
-
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), { type: 'detail' })
 const userModule = useUserModule()
 const cacheModule = useCacheModule()
 const tab = ref(0)
-const { project, refresh, members } = useProject({ type: 'detail', id: props.id })
+const { project, refresh, members } = useProject(props)
 
 const surveyUsers = computed(function () {
   return cacheModule.users.filter(item => item.id !== userModule.id)
 })
 
-/**
- * 当前下拉刷新状态
- */
-const isTriggered = ref(false)
-const isFinish = ref(false)
 const form = reactive(SurveyEntity.form())
-const page = reactive(new RequestList())
-const data = reactive(new ResponsePage<SurveyEntity>())
+
+const { search, table, pagination, onRefresh } = usePage({
+  form,
+  request: SurveyEntity.select
+})
 const instance = getCurrentInstance()!
 const pageViewStyle = reactive({ height: '100%' })
 
@@ -128,42 +106,22 @@ onReady(function () {
     .exec()
 })
 
-function onRefresh() {
-  isTriggered.value = true
-  page.current = 1
-  search()
-}
-
-function onLoadMore() {
-  if (page.current * page.size > data.total) {
-    isFinish.value = true
-    console.log('已经到底了')
-    return
-  }
-
-  page.current += 1
-  search(true)
-}
-
-async function search(bottom = false) {
-  data.loading = true
-
-  try {
-    const response = await SurveyEntity.select({ ...page, ...form })
-    data.list = bottom ? data.list.concat(response.list) : response.list
-    data.total = response.total
-  } finally {
-    data.loading = false
-    isTriggered.value = false
-  }
-}
-
 function createSurvey() {
-  uni.navigateTo({ url: `/pages/survey/action?project_id=${props.id}&type=add` })
+  const param = new URLSearchParams({
+    project_id: props.id,
+    type: 'add'
+  })
+
+  uni.navigateTo({ url: '/pages/module_a/survey/action?' + param.toString() })
 }
 
 function editProject() {
-  uni.navigateTo({ url: `/pages/project/action?id=${props.id}&type=edit` })
+  const param = new URLSearchParams({
+    project_id: props.id,
+    type: 'edit'
+  })
+
+  uni.navigateTo({ url: '/pages/module_a/project/action?' + param.toString() })
 }
 </script>
 

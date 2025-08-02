@@ -22,7 +22,12 @@ interface Props {
 const { item } = defineProps<Props>()
 
 function toDetail() {
-  uni.navigateTo({ url: `/pages/survey/action?id=${item.id}&type=edit` })
+  const param = new URLSearchParams({
+    id: String(item.id),
+    type: 'edit'
+  })
+
+  uni.navigateTo({ url: '/pages/module_a/survey/action?' + param.toString() })
 }
 </script>
 

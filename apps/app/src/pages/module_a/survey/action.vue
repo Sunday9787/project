@@ -114,15 +114,10 @@ import type { UploadSuccessEvent } from 'wot-design-uni/components/wd-upload/typ
 
 import { useWatermarkImage } from '@/hooks/useWatermarkImage'
 import { SurveyEntity } from '@/service/survey.entity'
-import { OSSFormData } from '@/service/upload.service'
+import type { OSSFormData } from '@/service/upload.service'
 import { useCacheModule } from '@/store/cache'
 
-import { ChooseImageType, useSurvey, useUpload } from './hooks'
-
-interface Props {
-  id: string
-  type: Utils.ActionType
-}
+import { ChooseImageType, type Props, useSurvey, useUpload } from './hooks'
 
 const cacheModule = useCacheModule()
 const host = computed(function () {
@@ -231,9 +226,14 @@ async function submit() {
     // 将图片挂载到实体
     const id = await form.value.save()
 
+    const param = new URLSearchParams({
+      id: String(id),
+      type: 'add'
+    })
+
     uni.setStorageSync('owner', form.value.owner)
     uni.setStorageSync('location', form.value.location)
-    uni.navigateTo({ url: `/pages/survey/index?id=${id}&type=add` })
+    uni.navigateTo({ url: '/pages/module_a/survey/index?' + param.toString() })
   }
 }
 </script>

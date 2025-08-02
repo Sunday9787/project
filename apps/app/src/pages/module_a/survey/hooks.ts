@@ -4,7 +4,12 @@ import type { UploadInstance } from 'wot-design-uni/components/wd-upload/types'
 import { useLoading } from '@/hooks/useLoading'
 import { SurveyEntity, SurveyItemEntity } from '@/service/survey.entity'
 
-export function useSurvey(props: Utils.ActionProps): Ref<SurveyEntity> {
+export interface Props {
+  id: string
+  type: Utils.ActionType
+}
+
+export function useSurvey(props: Props): Ref<SurveyEntity> {
   const form = ref(new SurveyEntity(Number(props.id)))
 
   if (props.type !== 'add') {
@@ -23,7 +28,7 @@ export function useSurvey(props: Utils.ActionProps): Ref<SurveyEntity> {
   return form
 }
 
-export function useSurveyList(props: Utils.ActionProps) {
+export function useSurveyList(props: Props) {
   const data = ref<SurveyItemEntity[]>([])
 
   const { loading, refresh } = useLoading(async function () {

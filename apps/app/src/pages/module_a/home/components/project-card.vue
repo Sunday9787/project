@@ -30,29 +30,29 @@ interface Props {
 const { item } = defineProps<Props>()
 
 function toDetail() {
-  uni.navigateTo({ url: `/pages/project/detail?id=${item.id}` })
+  uni.navigateTo({ url: `/pages/module_a/project/detail?id=${item.id}` })
 }
 </script>
 
 <style lang="scss">
 .project-card {
   position: relative;
-  padding: 20rpx;
+  padding: 10px;
   // margin-top: 30rpx;
   background-color: #fff;
-  border-radius: 12rpx;
+  border-radius: 6px;
 
   &--time {
-    font-size: 24rpx;
+    font-size: 12px;
     color: #757575;
   }
 
   &__title {
-    font-size: 40rpx;
+    font-size: 20px;
   }
 
   &__line {
-    font-size: 28rpx;
+    font-size: 14px;
   }
 
   &__status {
@@ -63,7 +63,7 @@ function toDetail() {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    margin-top: 20rpx;
+    margin-top: 10px;
   }
 }
 </style>

@@ -23,7 +23,8 @@ section.auth-container
           show-password
           clearable
           placeholder="请输入密码"
-          :rules="[{ required: true, message: '请填写密码' }]")
+          :rules="[{ required: true, message: '请填写密码' }]"
+          @confirm="handleSubmit")
 
       wd-cell-group(custom-class="mt-40")
         wd-button(block size="large" @click="handleSubmit()") 登录
@@ -55,21 +56,24 @@ async function handleSubmit() {
   if (result.valid) {
     await userModule.logIn(form)
     await cacheModule.cache()
-    uni.navigateTo({ url: '/pages/home/index' })
+    uni.navigateTo({ url: '/pages/module_a/home/index' })
   }
 }
 </script>
 
 <style lang="scss">
 .auth-container {
-  padding: 60rpx;
+  padding-top: calc(30px + env(safe-area-inset-top));
+  padding-right: 30px;
+  padding-bottom: calc(30px + env(safe-area-inset-bottom));
+  padding-left: 30px;
 }
 
 .auth-welcome {
-  font-size: 80rpx;
+  font-size: 40px;
 }
 
 .auth-form {
-  margin-top: 120rpx;
+  margin-top: 60px;
 }
 </style>

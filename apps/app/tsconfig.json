@@ -1,7 +1,7 @@
 // tsconfig.json
 {
   "vueCompilerOptions": {
-    "plugins": ["@vue/language-plugin-pug"]
+    "plugins": ["@vue/language-plugin-pug", "@uni-helper/uni-types/volar-plugin"]
   },
   "extends": "@vue/tsconfig/tsconfig.json",
   "compilerOptions": {
@@ -11,7 +11,7 @@
     "jsx": "preserve",
     "moduleResolution": "bundler",
     "moduleDetection": "auto",
-    "verbatimModuleSyntax": false,
+    "verbatimModuleSyntax": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "esModuleInterop": true,
@@ -27,6 +27,7 @@
     },
     "types": [
       "@dcloudio/types",
+      "@uni-helper/uni-types",
       "wot-design-uni/global",
       "miniprogram-api-typings",
       "@repo/service",

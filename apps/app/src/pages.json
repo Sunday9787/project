@@ -2,41 +2,41 @@
   "easycom": {
     "autoscan": true,
     "custom": {
-      "a-(.*)": "./components/a-$1/a-$1.vue",
+      "^layout-(.*)": "@/layout/layout-$1/layout-$1.vue",
       "^wd-(.*)": "wot-design-uni/components/wd-$1/wd-$1.vue"
     }
   },
   "pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
-      "path": "pages/home/index",
+      "path": "pages/module_a/home/index",
       "style": {
         "navigationBarTitleText": "首页"
       }
     },
     {
-      "path": "pages/survey/action"
+      "path": "pages/module_a/survey/action"
     },
     {
-      "path": "pages/survey/item"
+      "path": "pages/module_a/survey/item"
     },
     {
-      "path": "pages/survey/index",
+      "path": "pages/module_a/survey/index",
       "style": {
         "navigationBarTitleText": "调查列表"
       }
     },
     {
-      "path": "pages/project/action"
+      "path": "pages/module_a/project/action"
     },
     {
-      "path": "pages/project/detail",
+      "path": "pages/module_a/project/detail",
       "style": {
         "navigationBarTitleText": "项目详情"
       }
     },
     {
-      "path": "pages/auth/index",
+      "path": "pages/module_a/auth/index",
       "style": {
         "navigationBarTitleText": "登录"
       }
@@ -48,5 +48,17 @@
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },
-  "uniIdRouter": {}
+  "subPackages": [
+    {
+      "root": "pages/module_b/",
+      "pages": [
+        {
+          "path": "user/index",
+          "style": {
+            "navigationBarTitleText": "个人中心"
+          }
+        }
+      ]
+    }
+  ]
 }

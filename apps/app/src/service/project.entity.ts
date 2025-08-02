@@ -1,17 +1,18 @@
 import { AbstractEntity, ProjectStatus } from '@repo/service'
 import { Expose, Type } from 'class-transformer'
+import { type TextType } from 'wot-design-uni/components/wd-text/types'
 
 import { BaseEntity } from '@/class/base.entity'
 
 import { ProjectService } from './project.service'
 import { ResponseUserPlainDTO } from './user.entity'
 
-type StatusMap = { text: string; type: Utils.StatusType }
+type StatusMap = { text: string; type: TextType }
 
 export class ProjectItemQueryEntity {
-  client: string
-  name: string
-  keyword: string
+  @Expose() client: string
+  @Expose() name: string
+  @Expose() keyword: string
 }
 
 export class ProjectItemEntity extends BaseEntity {
