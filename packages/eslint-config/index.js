@@ -17,6 +17,13 @@ module.exports = {
     'import/newline-after-import': 'error',
     '@typescript-eslint/no-unused-vars': 'warn',
     '@typescript-eslint/no-non-null-assertion': 'off',
-    '@typescript-eslint/no-this-alias': ['error', { allowedNames: ['self'] }]
+    '@typescript-eslint/no-this-alias': ['error', { allowedNames: ['self'] }],
+    '@typescript-eslint/consistent-type-imports': [
+      'error',
+      {
+        prefer: 'type-imports', // 强制使用 `import type`
+        disallowTypeAnnotations: false
+      }
+    ]
   }
 }

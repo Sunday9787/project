@@ -1,5 +1,5 @@
 declare global {
-  declare namespace Page {
+  declare namespace AppUsePage {
     type TimeField<Str extends string> = Str extends `${infer K}Date` ? K : unknown
     type TimeFieldValueStart<Str extends string> = `${TimeField<Str>}_start`
     type TimeFieldValueEnd<Str extends string> = `${TimeField<Str>}_end`
