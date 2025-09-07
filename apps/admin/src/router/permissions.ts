@@ -7,7 +7,7 @@ import { useUserModule } from '@/store/modules/user'
 
 import router from '.'
 
-const whiteList: ReadonlyArray<string> = ['/403', '/404']
+const whiteList: ReadonlyArray<string> = ['/403', '/404', '/workbench']
 
 router.beforeEach(function (to, _form, next) {
   NProgress.start()

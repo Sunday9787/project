@@ -14,6 +14,10 @@ const router = createRouter({
       path: '/login',
       component: () => import('@/views/login/index.vue')
     },
+    {
+      path: '/workbench',
+      component: () => import('@/views/workbench/index.vue')
+    },
     dashboardRoute,
     projectRoute,
     systemRoute,
